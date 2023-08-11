@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://github.com/plehmkuhl/otherland-packet-formats/otherproto.schema.yaml
+title: "Otherland packet format description"
+
+allOf:
+  - type: object
+    required: [id]
+    properties:
+      id:
+        type: integer
+      inherit:
+        type: string
+        
+  - { $ref: "#/$defs/fieldsList" }
+
+$defs:
+  fieldsList:
+    type: object
+    required: [fields]
+    properties:
+      fields:
+        type: array
+        items: { $ref: "#/$defs/fieldItem" }
+        
+  fieldItem:
+    anyOf:
+      - { $ref: "#/$defs/field" }
+      - { $ref: "#/$defs/branch" }
+      - { $ref: "#/$defs/loop" }
+
+  branch:
+    type: object
+    additionalProperties: false
+    required: [branch]
+    properties:
+      branch:
+        type: object
+        required: [field]
+        properties:
+          field:
+            type: string
+          isTrue: { $ref: "#/$defs/fieldsList" }
+          isFalse: { $ref: "#/$defs/fieldsList" }
+
+  loop:
+    type: object
+    additionalProperties: false
+    required: [loop]
+    properties:
+      loop:
+        type: object
+        required: [field]
+        properties:
+          field:
+            type: string
+          body: { $ref: "#/$defs/fieldsList" }
+      
+  field:
+    type: object
+    required: [type]
+    properties:
+      name:
+        type: string
+      type:
+        $ref: "#/$defs/fieldType"
+
+  fieldType:
+    anyOf:
+      - { $ref: "#/$defs/primitiveFieldType" }
+      
+      - type: object
+        additionalProperties: false
+        required: [name]
+        properties:
+          name: { $ref: "#/$defs/primitiveFieldType" }
+          
+      - type: object
+        additionalProperties: false
+        required: [name, len, subtype]
+        properties:
+          name:
+            const: array
+          len:
+            type: [integer, string]
+          subtype: { $ref: "#/$defs/primitiveFieldType" }
+
+  primitiveFieldType:
+    type: string
+    enum: [bool, cstring, u8, u16, u32]
