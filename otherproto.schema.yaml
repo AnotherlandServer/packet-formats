@@ -77,14 +77,32 @@ $defs:
           
       - type: object
         additionalProperties: false
-        required: [name, len, subtype]
+        required: [name, len, type]
         properties:
           name:
             const: array
           len:
             type: [integer, string]
-          subtype: { $ref: "#/$defs/primitiveFieldType" }
+          type: { $ref: "#/$defs/primitiveFieldType" }
+
+      - type: object
+        additionalProperties: false
+        required: [name, maxlen]
+        properties:
+          name:
+            const: cstring
+          maxlen:
+            type: [integer, string]
+
+      - type: object
+        additionalProperties: false
+        required: [name, maxlen]
+        properties:
+          name:
+            const: wstring
+          maxlen:
+            type: [integer, string]
 
   primitiveFieldType:
     type: string
-    enum: [bool, cstring, u8, u16, u32]
+    enum: [bool, cstring, wstring, u8, u16, u32, u64, i8, i16, i32, i64]

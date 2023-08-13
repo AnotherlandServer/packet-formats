@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=../otherproto.schema.yaml
+
+id: 0x1b
+inherit: CPkt
+fields:
+  - name: username
+    type: { name: cstring, maxlen: 256}
+  - name: password
+    type: { name: cstring, maxlen: 128 }
+  - type: { name: cstring, maxlen: 64 } # this might be a field for the steam id
+  - type: u32
+  - type: bool
+  - type: { name: array, len: 16, type: u8 }
+  - name: system_info
+    type: { name: array, len: 30, type: wstring }
+  - type: u32
+  - type: u32
+  - type: u32
+  - type: u32
+  - type: u16
+  - type: u32
+  - type: u64
+  - type: u16
+  - type: u32
+  - type: { name: cstring, maxlen: 1024} # this might be a steam authentication token
+  - type: u32
+  - type: cstring
+  - type: cstring
+  - type: cstring
