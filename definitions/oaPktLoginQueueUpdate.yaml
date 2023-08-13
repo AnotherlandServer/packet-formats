@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=../otherproto.schema.yaml
+
+id: 0xa8
+inherit: CPkt
+fields:
+  - name: field36_0x24
+    type: u32
+  - name: field37_0x28
+    type: u32
+  - name: field38_0x2c
+    type: u32
