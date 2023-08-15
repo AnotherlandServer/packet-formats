@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../otherland.struct.schema.yaml
+
+fields:
+  - name: timeLow
+    type: u32
+  - name: timeMid
+    type: u16
+  - name: timeHiAndVersion
+    type: u16
+  - name: clockSeqHighAndReserved
+    type: u8
+  - name: clockSeqLow
+    type: u8
+  - name: node
+    type: { name: array, len: 6, type: u8 }

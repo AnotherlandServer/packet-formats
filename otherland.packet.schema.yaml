@@ -1,13 +1,15 @@
 # yaml-language-server: $schema=https://json-schema.org/draft/2020-12/schema
 $schema: https://json-schema.org/draft/2020-12/schema
-$id: https://github.com/plehmkuhl/otherland-packet-formats/otherproto.schema.yaml
+$id: https://github.com/plehmkuhl/otherland-packet-formats/otherland.packet.schema.yaml
 title: "Otherland packet format description"
 
 allOf:
   - type: object
-    required: [id]
+    required: [id, subId]
     properties:
       id:
+        type: integer
+      subId:
         type: integer
       inherit:
         type: string
@@ -59,6 +61,7 @@ $defs:
   field:
     type: object
     required: [type]
+    additionalProperties: false
     properties:
       name:
         type: string
@@ -74,6 +77,7 @@ $defs:
         required: [name]
         properties:
           name: { $ref: "#/$defs/primitiveFieldType" }
+          enum: { $ref: "#/$defs/enumFieldType" }
           
       - type: object
         additionalProperties: false
@@ -104,5 +108,15 @@ $defs:
             type: [integer, string]
 
   primitiveFieldType:
-    type: string
-    enum: [bool, cstring, wstring, u8, u16, u32, u64, i8, i16, i32, i64]
+    anyOf:
+      - type: string
+        enum: [bool, cstring, wstring, u8, u16, u32, u64, i8, i16, i32, i64]
+      - type: string
+        pattern: ^:.+
+
+  enumFieldType:
+    type: object
+    additionalProperties: false
+    patternProperties:
+      "^[0-9]+$": 
+        type: string

@@ -1,8 +1,0 @@
-# yaml-language-server: $schema=../otherproto.schema.yaml
-
-id: -1 # No real id. CPkt is only ever used as base for other packets
-fields:
-  - name: field10_0x11
-    type: u8
-  - name: field8_0x8
-    type: u64

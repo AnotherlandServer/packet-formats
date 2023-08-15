@@ -1,6 +1,7 @@
-# yaml-language-server: $schema=../otherproto.schema.yaml
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
 
 id: 0x1b
+subId: 0x00
 inherit: CPkt
 fields:
   - name: username
