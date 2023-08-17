@@ -41,7 +41,7 @@ fields:
         - name: username
           type: cstring
         - name: sessionId
-          type: :uuid
+          type: :Uuid
       isFalse:
         fields:
         - name: field316_0x15
