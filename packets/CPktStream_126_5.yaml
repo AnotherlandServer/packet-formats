@@ -7,5 +7,6 @@ id: 0x7e
 subId: 0x05
 inherit: CPkt
 fields:
+  - type: u16
   - name: character
     type: :oaCharacter

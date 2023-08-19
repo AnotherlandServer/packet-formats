@@ -2,6 +2,12 @@
 
 fields:
   - type: u16
-  - type: cstring
-  - type: u16
+  - name: name
+    type: cstring
+  - name: worldId
+    type: u16
+  - type: u32
+    name: length
+  - name: params
+    type: { name: array, len: length, type: u8 }
   - type: u16

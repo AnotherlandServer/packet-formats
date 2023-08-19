@@ -11,4 +11,4 @@ fields:
   - name: worldPort # i guess
     type: u16
   - name: magicBytes
-    type: { name: array, len: 10, type: u8 }
+    type: { name: array, len: 16, type: u8 }
