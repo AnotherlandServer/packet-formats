@@ -19,7 +19,6 @@ allOf:
 $defs:
   fieldsList:
     type: object
-    required: [fields]
     properties:
       fields:
         type: array
