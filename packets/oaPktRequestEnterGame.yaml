@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+id: 0xa8
+subId: 0x00
+inherit: CPkt
+fields:
+  - type: :Uuid
+  - name: magicBytes
+    type: { name: array, len: 10, type: u8 }

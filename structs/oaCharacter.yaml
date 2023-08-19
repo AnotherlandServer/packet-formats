@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=../otherland.struct.schema.yaml
+
+fields:
+  - type: u16
+  - type: cstring
+  - type: u16
+  - type: u16

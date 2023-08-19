@@ -1,9 +1,0 @@
-# yaml-language-server: $schema=../otherland.packet.schema.yaml
-
-id: 0x7e
-subId: 0x01
-inherit: oaPktRequestCharacterList
-fields:
-  - type: { name: array, len: 8, type: u8 }
-  # oaCharacterList -> oaCharacter
-  
