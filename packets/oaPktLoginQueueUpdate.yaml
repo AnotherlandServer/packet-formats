@@ -4,9 +4,9 @@ id: 0xa8
 subId: 0x04
 inherit: CPkt
 fields:
-  - name: field36_0x24
+  - name: channel
     type: u32
-  - name: field37_0x28
+  - name: number
     type: u32
   - name: field38_0x2c
     type: u32
