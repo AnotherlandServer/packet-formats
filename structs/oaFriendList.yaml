@@ -3,5 +3,5 @@
 fields:
   - name: count
     type: u32
-  - name: characters
-    type: { name: array, len: count, type: :oaCharacter }
+  - name: friends
+    type: { name: array, len: count, type: :oaFriendInfo }

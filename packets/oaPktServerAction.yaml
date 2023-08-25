@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+id: 0x8c
+subId: 0x31
+inherit: CPkt
+fields:
+  - type: u64
+  - name: instigator
+    type: u64
+  - name: action
+    type: cstring
+  - name: version
+    type: u32
+  - type: cstring
+  - name: overrideTeleport
+    type: bool
+  - type: { name: array, len: 3, type: f32 }
+  - type: { name: array, len: 4, type: f32 }

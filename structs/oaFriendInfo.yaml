@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=../otherland.struct.schema.yaml
+
+fields:
+  - type: u32
+  - type: u64
+  - type: cstring
+  - type: u32
+  - type: u32
+  - type: u32
+  - type: u32
+  - type: bool
+  - type: :Uuid

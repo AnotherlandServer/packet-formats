@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+id: 0x23 
+subId: 0x0
+inherit: CPkt
+fields:
+  - name: avatarName
+    type: cstring
+  - name: avatarId
+    type: u64
+  - name: classId
+    type: u32
+  - name: dataLen1
+    type: u32
+  - name: data1
+    type: { name: array, len: dataLen1, type: u8 }
+  - name: dataLen2
+    type: u32
+  - name: data2
+    type: { name: array, len: dataLen2, type: u8 }
+  - name: hasGuid
+    type: bool
+  - branch:
+      field: hasGuid
+      isTrue:
+        fields:
+        - type: :Uuid

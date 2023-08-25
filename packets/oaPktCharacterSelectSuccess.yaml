@@ -6,9 +6,9 @@ inherit: CPkt
 fields:
   - type: u32
   - type: u32
-  - name: worldIp # i guess
+  - name: worldIp
     type: u32
-  - name: worldPort # i guess
+  - name: worldPort
     type: u16
   - name: magicBytes
     type: { name: array, len: 16, type: u8 }

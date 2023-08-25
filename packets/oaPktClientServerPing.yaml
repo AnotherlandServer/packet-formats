@@ -1,0 +1,14 @@
+id: 0x8c 
+subId: 0x32
+inherit: CPkt
+fields:
+  - type: u64
+  - type: :Uuid
+  - type: bool
+  - type: u64
+  - type: u64
+  - type: u64
+  - type: u64
+  - type: u64
+  - type: u64
+  - type: u32
