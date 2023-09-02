@@ -41,6 +41,10 @@ $defs:
         properties:
           field:
             type: string
+          test_flag:
+            type: integer
+          test_equal:
+            type: integer
           isTrue: { $ref: "#/$defs/fieldsList" }
           isFalse: { $ref: "#/$defs/fieldsList" }
 
@@ -109,7 +113,7 @@ $defs:
   primitiveFieldType:
     anyOf:
       - type: string
-        enum: [bool, cstring, wstring, u8, u16, u32, u64, i8, i16, i32, i64, f32]
+        enum: [bool, cstring, wstring, u8, u16, u32, u64, i8, i16, i32, i64, f32, nativeparam]
       - type: string
         pattern: ^:.+
 
