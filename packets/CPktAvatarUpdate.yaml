@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+id: 0x24 
+subId: 0x0
+inherit: CPkt
+fields:
+  - name: fullUpdate
+    type: bool
+  - branch:
+      field: fullUpdate
+      isFalse:
+        fields:
+          - name: avatarId
+            type: u64
+      isTrue:
+        fields:
+          - type: bool
+          - name: avatarId
+            type: u64
+          - type: cstring
+          - type: u32
+          - type: :Uuid
+          - type: u8
+            name: flags
+          - branch:
+              field: flags
+              test_flag: 8
+              isTrue:
+                fields:
+                - type: :Uuid
+          - branch:
+              field: flags
+              test_flag: 4
+              isTrue:
+                fields:
+                - type: :Uuid 
+          - branch:
+              field: flags
+              test_flag: 2
+              isTrue:
+                fields:
+                - type: :Uuid 
+          - name: dataLen
+            type: u32
+          - type: { name: array, len: dataLen, type: u8 }
+  - type: u16
+  - name: dataLen2
+    type: u32
+  - type: { name: array, len: dataLen2, type: u8 }
