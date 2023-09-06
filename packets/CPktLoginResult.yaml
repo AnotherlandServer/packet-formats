@@ -44,12 +44,10 @@ fields:
           type: :Uuid
       isFalse:
         fields:
-        - name: field316_0x15
+        - name: messageLen
           type: u8
-        - name: field316_0x150
-          type: u32
-        - name: field_0x50
-          type: { name: array, len: field316_0x150, type: u8 }
+        - name: message
+          type: { name: array, len: messageLen, type: u8 }
         - name: unknownStringArrayLength
           type: u16
         - type: { name: array, len: unknownStringArrayLength, type: cstring }
