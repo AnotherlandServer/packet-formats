@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=../otherland.struct.schema.yaml
+
+fields:
+  - type: u32
+    name: count
+  - type: { name: array, type: :FactionRelation, len: count }
+    name: factions

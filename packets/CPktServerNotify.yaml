@@ -22,16 +22,22 @@ fields:
       isTrue:
         fields:
           - type: u64
-  - branch:
-      field: notifyType
-      test_equal: 1
-      isTrue:
+      isFalse:
         fields:
-          - type: u32
-  - branch:
-      field: notifyType
-      test_equal: 19
-      isTrue:
-        fields:
-          - type: u64
-  - type: cstring
+        - branch:
+            field: notifyType
+            test_equal: 1
+            isTrue:
+              fields:
+                - type: u32
+            isFalse:
+              fields:
+              - branch:
+                  field: notifyType
+                  test_equal: 19
+                  isTrue:
+                    fields:
+                      - type: u64
+                  isFalse:
+                    fields:
+                      - type: cstring

@@ -7,10 +7,10 @@ fields:
   - type: u64
   - type: :Uuid
   - type: bool
-  - type: u64
-  - type: u64
-  - type: u64
-  - type: u64
-  - type: u64
-  - type: u64
+  - type: f64
+  - type: f64
+  - type: f64
+  - type: f64
+  - type: f64
+  - type: f64
   - type: u32
