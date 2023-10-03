@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../otherland.struct.schema.yaml
+
+fields:
+  - name: id
+    type: u32
+  - name: name
+    type: cstring
+  - name: channelCount
+    type: u32
+  - type: { name: array, len: channelCount, type: u32 }
+    name: channelId
+  - name: channelPopulationCount
+    type: u32
+  - type: { name: array, len: channelPopulationCount, type: f32 }
+    name: channelPopulation

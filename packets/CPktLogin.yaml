@@ -13,7 +13,7 @@ fields:
   - type: bool
   - name: magicBytes
     type: { name: array, len: 16, type: u8 }
-  - name: system_info
+  - name: systemInfo
     type: { name: array, len: 30, type: wstring }
   - type: u32
   - type: u32

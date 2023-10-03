@@ -10,5 +10,5 @@ fields:
     type: u32
   - name: worldPort
     type: u16
-  - name: magicBytes
-    type: { name: array, len: 16, type: u8 }
+  - name: sessionId
+    type: :Uuid

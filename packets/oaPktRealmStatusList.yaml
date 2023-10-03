@@ -6,13 +6,5 @@ fields:
   - name: realmCount
     type: u32
     # this section will be repeated per realm
-  - name: realmId
-    type: u32
-  - name: realmName
-    type: cstring
-  - name: channelCount
-    type: u32
-  - type: { name: array, len: channelCount, type: u32 }
-  - name: channelFlagCount
-    type: u32
-  - type: { name: array, len: channelFlagCount, type: u32 }
+  - type: { name: array, len: realmCount, type: :RealmStatus }
+    name: realms

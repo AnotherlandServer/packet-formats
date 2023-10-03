@@ -5,4 +5,5 @@ subId: 0x00
 inherit: CPkt
 fields:
   - type: :Uuid
+    name: sessionId
   - type: { name: array, len: 16, type: u8 }

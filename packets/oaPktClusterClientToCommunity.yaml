@@ -2,9 +2,4 @@
 
 id: 0x8c 
 subId: 0x9
-inherit: CPkt
-fields:
-  - type: :Uuid
-  - type: cstring
-  - type: nativeparam
-  - type: u32
+inherit: oaCommunityBasePkt
