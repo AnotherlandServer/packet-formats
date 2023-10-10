@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+id: 0x8c
+subId: 0x22
+inherit: CPkt
+fields:
+  - type: u32
+  - name: itemCount
+    type: u32
+  - name: items
+    type: { name: array, len: itemCount, type: :CashItemVendorEntry }
+  - name: deletedCount
+    type: u32
+  - name: deletedIds
+    type: { name: array, len: deletedCount, type: cstring }

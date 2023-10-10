@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=../otherland.struct.schema.yaml
+
+fields:
+  - name: pos
+    type: :NetworkVec3
+  - name: rot
+    type: :NetworkVec4
+  - name: vel
+    type: :NetworkVec3

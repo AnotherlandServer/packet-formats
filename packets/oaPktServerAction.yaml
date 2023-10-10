@@ -14,5 +14,7 @@ fields:
   - type: cstring
   - name: overrideTeleport
     type: bool
-  - type: { name: array, len: 3, type: f32 }
-  - type: { name: array, len: 4, type: f32 }
+  - type: :NetworkVec3
+    name: pos
+  - type: :NetworkVec4
+    name: rot

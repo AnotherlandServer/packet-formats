@@ -1,0 +1,8 @@
+# yaml-language-server: $schema=../otherland.struct.schema.yaml
+
+fields:
+  - type: cstring
+    name: id
+  - type: u32
+    name: version
+  

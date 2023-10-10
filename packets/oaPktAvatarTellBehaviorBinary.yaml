@@ -1,12 +1,10 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0xad
-subId: 0x01
+id: 0x8c
+subId: 0x2
 inherit: CPkt
 fields:
-  - type: :PositionUpdate
-    name: pos
-  - type: u8
-  - type: u16
   - type: u64
   - type: u64
+  - type: cstring
+  - type: nativeparam

@@ -10,14 +10,14 @@ fields:
     type: u64
   - name: classId
     type: u32
-  - name: dataLen1
+  - name: paramBytes
     type: u32
-  - name: data1
-    type: { name: array, len: dataLen1, type: u8 }
-  - name: dataLen2
+  - name: params
+    type: { name: array, len: paramBytes, type: u8 }
+  - name: movementBytes
     type: u32
-  - name: data2
-    type: { name: array, len: dataLen2, type: u8 }
+  - name: movement
+    type: { name: array, len: movementBytes, type: u8 }
   - name: hasGuid
     type: bool
   - branch:
