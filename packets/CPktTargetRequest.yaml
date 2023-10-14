@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+id: 0x66
+subId: 0x0
+inherit: CPkt
+fields:
+  - type: u64
+  - type: u64
+  - type: u16

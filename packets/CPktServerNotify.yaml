@@ -26,10 +26,10 @@ fields:
         fields:
         - branch:
             field: notifyType
-            test_equal: 1
+            test_equal: 2
             isTrue:
               fields:
-                - type: u32
+                - type: cstring
             isFalse:
               fields:
               - branch:
