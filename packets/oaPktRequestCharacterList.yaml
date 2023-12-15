@@ -6,4 +6,5 @@ inherit: CPkt
 fields:
   - type: :Uuid
     name: sessionId
-  - type: { name: array, len: 16, type: u8 }
+  - name: magicBytes
+    type: { name: array, len: 16, type: u8 }
