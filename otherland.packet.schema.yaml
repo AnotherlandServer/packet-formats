@@ -109,7 +109,7 @@ $defs:
   enumFieldType:
     type: object
     additionalProperties: false
-    required: [name]
+    required: [name, enum]
     properties:
       name: { $ref: "#/$defs/primitiveFieldType" }
       enum:

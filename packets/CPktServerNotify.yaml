@@ -7,7 +7,7 @@ fields:
   - name: notifyType
     type:
       name: u16
-      #enum:
+      enum: {}
       #  0: SyncGameClock
       #  2: Message_2
       #  3: Message_3
