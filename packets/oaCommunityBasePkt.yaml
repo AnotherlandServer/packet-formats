@@ -2,10 +2,10 @@
 
 packets:
   oaCommunityPktBase:
-    id: 0 # No real id. CPkt is only ever used as base for other packets
+    id: 0 # No real id. oaCommunityPktBase is only ever used as base for other packets
     subId: 0
+    inherit: CPkt
     fields:
-      - type: u64
       - type: :Uuid
       - type: cstring
       - type: nativeparam
