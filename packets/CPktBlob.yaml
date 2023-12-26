@@ -1,27 +1,29 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0x23 
-subId: 0x0
-inherit: CPkt
-fields:
-  - name: avatarName
-    type: cstring
-  - name: avatarId
-    type: u64
-  - name: classId
-    type: u32
-  - name: paramBytes
-    type: u32
-  - name: params
-    type: { name: array, len: paramBytes, type: u8 }
-  - name: movementBytes
-    type: u32
-  - name: movement
-    type: { name: array, len: movementBytes, type: u8 }
-  - name: hasGuid
-    type: bool
-  - branch:
-      field: hasGuid
-      isTrue:
-        fields:
-        - type: :Uuid
+packets:
+  CPktBlob:
+    id: 0x23
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - name: avatarName
+        type: cstring
+      - name: avatarId
+        type: u64
+      - name: classId
+        type: u32
+      - name: paramBytes
+        type: u32
+      - name: params
+        type: { name: array, len: paramBytes, type: u8 }
+      - name: movementBytes
+        type: u32
+      - name: movement
+        type: { name: array, len: movementBytes, type: u8 }
+      - name: hasGuid
+        type: bool
+      - branch:
+          field: hasGuid
+          isTrue:
+            fields:
+            - type: :Uuid

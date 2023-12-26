@@ -1,10 +1,12 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0x7e
-subId: 0x00
-inherit: CPkt
-fields:
-  - type: :Uuid
-    name: sessionId
-  - name: magicBytes
-    type: { name: array, len: 16, type: u8 }
+packets:
+  oaPktRequestCharacterList:
+    id: 0x7e
+    subId: 0x00
+    inherit: CPkt
+    fields:
+      - type: :Uuid
+        name: sessionId
+      - name: magicBytes
+        type: { name: array, len: 16, type: u8 }

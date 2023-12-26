@@ -1,12 +1,14 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0xa8
-subId: 0x04
-inherit: CPkt
-fields:
-  - name: channel
-    type: u32
-  - name: number
-    type: u32
-  - name: field38_0x2c
-    type: u32
+packets:
+  oaPktLoginQueueUpdate:
+    id: 0xa8
+    subId: 0x04
+    inherit: CPkt
+    fields:
+      - name: channel
+        type: u32
+      - name: number
+        type: u32
+      - name: field38_0x2c
+        type: u32

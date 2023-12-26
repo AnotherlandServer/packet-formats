@@ -3,20 +3,38 @@ $schema: https://json-schema.org/draft/2020-12/schema
 $id: https://github.com/plehmkuhl/otherland-packet-formats/otherland.packet.schema.yaml
 title: "Otherland packet format description"
 
-allOf:
-  - type: object
-    required: [id, subId]
-    properties:
-      id:
-        type: integer
-      subId:
-        type: integer
-      inherit:
-        type: string
-        
-  - { $ref: "#/$defs/fieldsList" }
+type: object
+properties: 
+  packets:
+    type: object
+    additionalProperties: false
+    patternProperties:
+      "^\\w+$": { $ref: "#/$defs/packetDefinition" }
+
+  structures:
+    type: object
+    additionalProperties: false
+    patternProperties:
+      "^\\w+$": { $ref: "#/$defs/structureDefinition" }
 
 $defs:
+  packetDefinition:
+    allOf:
+      - { $ref: "#/$defs/fieldsList" }
+      - type: object
+        required: [id, subId]
+        properties:
+          id:
+            type: integer
+          subId:
+            type: integer
+          inherit:
+            type: string
+
+  structureDefinition:
+    allOf:
+      - { $ref: "#/$defs/fieldsList" }
+
   fieldsList:
     type: object
     properties:

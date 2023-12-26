@@ -1,17 +1,19 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0xa8
-subId: 0x05
-inherit: CPkt
-fields:
-  - type: bool
-  - type: bool
-  - type: bool
-  - type: bool
-  - type: bool
-  - type: bool
-  - type: bool
-  - type: bool
-  - name: len
-    type: u32
-  - type: { name: array, type: cstring, len: len }
+packets:
+  oaPktUIConfigUpdate:
+    id: 0xa8
+    subId: 0x05
+    inherit: CPkt
+    fields:
+      - type: bool
+      - type: bool
+      - type: bool
+      - type: bool
+      - type: bool
+      - type: bool
+      - type: bool
+      - type: bool
+      - name: len
+        type: u32
+      - type: { name: array, type: cstring, len: len }

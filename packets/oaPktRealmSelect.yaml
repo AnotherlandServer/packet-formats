@@ -1,7 +1,10 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
-id: 0xa4
-subId: 0x01
-inherit: CPkt
-fields:
-  - type: u32
-  - type: u32
+
+packets:
+  oaPktRealmSelect:
+    id: 0xa4
+    subId: 0x01
+    inherit: CPkt
+    fields:
+      - type: u32
+      - type: u32

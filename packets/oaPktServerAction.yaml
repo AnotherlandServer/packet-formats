@@ -1,20 +1,22 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0x8c
-subId: 0x31
-inherit: CPkt
-fields:
-  - type: u64
-  - name: instigator
-    type: u64
-  - name: action
-    type: cstring
-  - name: version
-    type: u32
-  - type: cstring
-  - name: overrideTeleport
-    type: bool
-  - type: :NetworkVec3
-    name: pos
-  - type: :NetworkVec4
-    name: rot
+packets:
+  oaPktServerAction:
+    id: 0x8c
+    subId: 0x31
+    inherit: CPkt
+    fields:
+      - type: u64
+      - name: instigator
+        type: u64
+      - name: action
+        type: cstring
+      - name: version
+        type: u32
+      - type: cstring
+      - name: overrideTeleport
+        type: bool
+      - type: :NetworkVec3
+        name: pos
+      - type: :NetworkVec4
+        name: rot
