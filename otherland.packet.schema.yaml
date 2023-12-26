@@ -4,14 +4,21 @@ $id: https://github.com/plehmkuhl/otherland-packet-formats/otherland.packet.sche
 title: "Otherland packet format description"
 
 type: object
-properties: 
+properties:
   packets:
+    description: >
+      A dictionary of packet descriptions, with keys
+      corresponding to class names from the game client.
     type: object
     additionalProperties: false
     patternProperties:
       "^\\w+$": { $ref: "#/$defs/packetDefinition" }
 
   structures:
+    description: >
+      A dictionary of user defined data structures,
+      which can be referenced in place of field types,
+      by prefixing their keys with ':'.
     type: object
     additionalProperties: false
     patternProperties:
@@ -19,19 +26,31 @@ properties:
 
 $defs:
   packetDefinition:
+    description: >
+      The definition of a data packet, sent or received
+      by the game client.
     allOf:
       - { $ref: "#/$defs/fieldsList" }
       - type: object
         required: [id, subId]
         properties:
           id:
+            description: >
+              First byte of the packet body, identifies the packet
+              type when combined with the subId. Packets with the
+              same id are usually related.
             type: integer
           subId:
+            description: >
+              Second byte of the packet body, identifies the packet
+              type when combined with the id.
             type: integer
           inherit:
             type: string
 
   structureDefinition:
+    description: >
+      A reusable user defined type.
     allOf:
       - { $ref: "#/$defs/fieldsList" }
 
@@ -39,6 +58,9 @@ $defs:
     type: object
     properties:
       fields:
+        description: >
+          A list of fields that make up the defined object.
+          Fields are serialized sequentially with no padding.
         type: array
         items: { $ref: "#/$defs/fieldItem" }
 
@@ -53,17 +75,43 @@ $defs:
     required: [branch]
     properties:
       branch:
+        description: >
+          This field contains a nested field list, whose structure
+          structure can vary based on a condition.
         type: object
         required: [field]
         properties:
           field:
+            description: >
+              The name of a previously defined field, which forms the
+              basis of the condition. This field should have an intrinsic
+              boolean or integer type. If an integer type field is used,
+              the branch condition should be specified by test_flag or
+              test_equal. Otherwise the branch condition is the boolean
+              field's value.
             type: string
           test_flag:
+            description: >
+              When used with an integer type field, defines the branch
+              condition as checking against a constant bitmask.
+              (field & test_flag) == test_flag 
             type: integer
           test_equal:
+            description: >
+              When used with an integer type field, defined the branch
+              condition as an equality test against a constant value.
+              field == test_equal
             type: integer
-          isTrue: { $ref: "#/$defs/fieldsList" }
-          isFalse: { $ref: "#/$defs/fieldsList" }
+          isTrue:
+            description: >
+              These fields are added to the object, if the branch condition
+              evaluates to 'true'.
+            $ref: "#/$defs/fieldsList"
+          isFalse:
+            description: >
+              These fields are added to the object, if the branch condition
+              evaluates to 'false'.
+            $ref: "#/$defs/fieldsList"
 
   field:
     type: object
@@ -71,8 +119,18 @@ $defs:
     additionalProperties: false
     properties:
       name:
+        description: >
+          The field's name, as it will be identified in generated code.
+          This should be unique in every possible branch. Fields with
+          the same name should also have the same type, except for array
+          or string lengths.
         type: string
-      type: { $ref: "#/$defs/fieldType" }
+      type:
+        description: >
+          Field's data type. This can be an intrinsic type, a user defined
+          data type prefixed with ':', an array type, a length limited string
+          type, or an enumeration type.
+        $ref: "#/$defs/fieldType"
 
   fieldType:
     anyOf:
@@ -84,8 +142,14 @@ $defs:
   primitiveFieldType:
     anyOf:
       - type: string
+        description: >
+          This is an intrinsic type, not directly defined by the packet
+          description document. See README for details.
         enum: [bool, cstring, wstring, u8, u16, u32, u64, i8, i16, i32, i64, f32, f64, nativeparam]
       - type: string
+        description: >
+          This is a user defined type that should appear in a 'structures'
+          dictionary in this or another packet description document.
         pattern: ^:.+
 
   limitedStringFieldType:
@@ -96,6 +160,11 @@ $defs:
       name:
         enum: [cstring, wstring]
       maxlen:
+        description: >
+          The maximum length of the string in bytes. The game client will not
+          read anything longer than this. If the client tries to send anything
+          longer than this, it will be truncated. May be specified as a constant
+          or as the name of a previously defined integer type field.
         type: [integer, string]
 
   arrayFieldType:
@@ -104,10 +173,19 @@ $defs:
     required: [name, len, type]
     properties:
       name:
+        description: >
+          Represents a repeating sequence of fields of the same type.
         const: array
       len:
+        description: >
+          The number if fields in the sequence. May be specified as a constant
+          or as the name of a previously defined integer type field.
         type: [integer, string]
-      type: { $ref: "#/$defs/primitiveFieldType" }
+      type: 
+        description: >
+          The type of the repeating fields. May be an intrinsic type or
+          user defined type.
+        $ref: "#/$defs/primitiveFieldType"
 
   enumFieldType:
     type: object
@@ -116,6 +194,10 @@ $defs:
     properties:
       name: { $ref: "#/$defs/primitiveFieldType" }
       enum:
+        description: >
+          A dictionary of possible values for the integer type field.
+          Keys are the possible values, values are names for these values,
+          which will appear in generated code.
         type: object
         additionalProperties: false
         patternProperties:
