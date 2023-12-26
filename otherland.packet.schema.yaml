@@ -23,7 +23,7 @@ $defs:
       fields:
         type: array
         items: { $ref: "#/$defs/fieldItem" }
-        
+
   fieldItem:
     anyOf:
       - { $ref: "#/$defs/field" }
@@ -60,7 +60,7 @@ $defs:
           field:
             type: string
           body: { $ref: "#/$defs/fieldsList" }
-      
+
   field:
     type: object
     required: [type]
@@ -75,23 +75,8 @@ $defs:
     anyOf:
       - { $ref: "#/$defs/primitiveFieldType" }
       - { $ref: "#/$defs/limitedStringFieldType" }
-      
-      - type: object
-        additionalProperties: false
-        required: [name]
-        properties:
-          name: { $ref: "#/$defs/primitiveFieldType" }
-          enum: { $ref: "#/$defs/enumFieldType" }
-          
-      - type: object
-        additionalProperties: false
-        required: [name, len, type]
-        properties:
-          name:
-            const: array
-          len:
-            type: [integer, string]
-          type: { $ref: "#/$defs/primitiveFieldType" }
+      - { $ref: "#/$defs/arrayFieldType" }
+      - { $ref: "#/$defs/enumFieldType" }
 
   primitiveFieldType:
     anyOf:
@@ -110,9 +95,26 @@ $defs:
       maxlen:
         type: [integer, string]
 
+  arrayFieldType:
+    type: object
+    additionalProperties: false
+    required: [name, len, type]
+    properties:
+      name:
+        const: array
+      len:
+        type: [integer, string]
+      type: { $ref: "#/$defs/primitiveFieldType" }
+
   enumFieldType:
     type: object
     additionalProperties: false
-    patternProperties:
-      "^[0-9]+$": 
-        type: string
+    required: [name]
+    properties:
+      name: { $ref: "#/$defs/primitiveFieldType" }
+      enum:
+        type: object
+        additionalProperties: false
+        patternProperties:
+          "^[0-9]+$":
+            type: string
