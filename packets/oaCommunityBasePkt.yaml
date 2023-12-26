@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
 packets:
-  oaCommunityBasePkt:
+  oaCommunityPktBase:
     id: 0 # No real id. CPkt is only ever used as base for other packets
     subId: 0
     fields:

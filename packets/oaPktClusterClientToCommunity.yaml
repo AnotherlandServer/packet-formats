@@ -4,4 +4,4 @@ packets:
   oaPktClusterClientToCommunity:
     id: 0x8c
     subId: 0x9
-    inherit: oaCommunityBasePkt
+    inherit: oaCommunityPktBase
