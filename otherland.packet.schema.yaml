@@ -28,7 +28,6 @@ $defs:
     anyOf:
       - { $ref: "#/$defs/field" }
       - { $ref: "#/$defs/branch" }
-      - { $ref: "#/$defs/loop" }
 
   branch:
     type: object
@@ -47,19 +46,6 @@ $defs:
             type: integer
           isTrue: { $ref: "#/$defs/fieldsList" }
           isFalse: { $ref: "#/$defs/fieldsList" }
-
-  loop:
-    type: object
-    additionalProperties: false
-    required: [loop]
-    properties:
-      loop:
-        type: object
-        required: [field]
-        properties:
-          field:
-            type: string
-          body: { $ref: "#/$defs/fieldsList" }
 
   field:
     type: object
