@@ -41,18 +41,23 @@ $defs:
               First byte of the packet body, identifies the packet
               type when combined with the subId. Packets with the
               same id are usually related.
-            type: integer
+            $ref: "#/$defs/idByte"
           subId:
             description: >
               Second byte of the packet body, identifies the packet
               type when combined with the id.
-            type: integer
+            $ref: "#/$defs/idByte"
           inherit:
             description: >
               The fields of the specified packet are also part of
               the current packet, appearing before the field list
               defined here.
             type: string
+
+  idByte:
+    type: integer
+    minimum: 0x00
+    maximum: 0xff
 
   structureDefinition:
     description: >
