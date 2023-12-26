@@ -165,7 +165,7 @@ $defs:
           read anything longer than this. If the client tries to send anything
           longer than this, it will be truncated. May be specified as a constant
           or as the name of a previously defined integer type field.
-        type: [integer, string]
+        $ref: "#/$defs/len"
 
   arrayFieldType:
     type: object
@@ -180,12 +180,18 @@ $defs:
         description: >
           The number if fields in the sequence. May be specified as a constant
           or as the name of a previously defined integer type field.
-        type: [integer, string]
+        $ref: "#/$defs/len"
       type: 
         description: >
           The type of the repeating fields. May be an intrinsic type or
           user defined type.
         $ref: "#/$defs/primitiveFieldType"
+
+  len:
+    anyOf:
+      - type: integer
+        minimum: 0
+      - type: string
 
   enumFieldType:
     type: object
