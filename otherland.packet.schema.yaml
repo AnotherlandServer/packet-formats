@@ -46,6 +46,10 @@ $defs:
               type when combined with the id.
             type: integer
           inherit:
+            description: >
+              The fields of the specified packet are also part of
+              the current packet, appearing before the field list
+              defined here.
             type: string
 
   structureDefinition:
