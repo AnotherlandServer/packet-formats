@@ -28,7 +28,9 @@ $defs:
   packetDefinition:
     description: >
       The definition of a data packet, sent or received
-      by the game client.
+      by the game client. The actual binary representation
+      contains two bytes of identifiers, followed by the
+      listed fields.
     allOf:
       - { $ref: "#/$defs/fieldsList" }
       - type: object
