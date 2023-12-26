@@ -54,8 +54,7 @@ $defs:
     properties:
       name:
         type: string
-      type:
-        $ref: "#/$defs/fieldType"
+      type: { $ref: "#/$defs/fieldType" }
 
   fieldType:
     anyOf:
