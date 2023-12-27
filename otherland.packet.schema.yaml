@@ -138,7 +138,7 @@ $defs:
         type: string
       type:
         description: >
-          Field's data type. This can be an intrinsic type, a user defined
+          The field's data type. This can be an intrinsic type, a user defined
           data type prefixed with ':', an array type, a length limited string
           type, or an enumeration type.
         $ref: "#/$defs/fieldType"
@@ -189,7 +189,7 @@ $defs:
         const: array
       len:
         description: >
-          The number if fields in the sequence. May be specified as a constant
+          The number of fields in the sequence. May be specified as a constant
           or as the name of a previously defined integer type field.
         $ref: "#/$defs/len"
       type: 
