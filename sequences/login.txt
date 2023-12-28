@@ -27,6 +27,7 @@ Client -> "Realm Server": connect
 "Realm Server" -> Client: connect response
 Client -> "Realm Server": oaPktRequestCharacterList
 "Realm Server" -> Client: CPktStream<126,1>
+Client --> User: Display character list
 
 group Create character
 User -> Client: Create character
@@ -51,7 +52,6 @@ Client --> User: Done
 end
 
 group Select character
-Client --> User: Present character list
 User -> Client: Select character
 
 Client -> "Realm Server": oaPktRequestSelectWorld
