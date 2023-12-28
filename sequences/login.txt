@@ -1,0 +1,71 @@
+@startuml
+actor User
+
+== Login ==
+
+User -> Client: Input login credentials
+Client -> "Login Server": connect
+"Login Server" -> Client: connect response
+Client -> "Login Server": CPktLogin
+activate "Login Server"
+"Login Server" -> Client: CPktLoginResult
+Client --> User: Login successful
+
+alt Multi-realm server
+"Login Server" -->> Client: oaPktRealmStatusList
+deactivate "Login Server"
+Client -> "Login Server": ???
+"Login Server" -> Client: ???
+end
+
+Client ->> "Login Server": disconnect
+destroy "Login Server"
+
+== Character select ==
+
+Client -> "Realm Server": connect
+"Realm Server" -> Client: connect response
+Client -> "Realm Server": oaPktRequestCharacterList
+"Realm Server" -> Client: CPktStream<126,1>
+Client --> User: Display character list
+
+group Create character
+User -> Client: Create character
+Client -> "Realm Server": oaPktCharacterCreate
+alt#LightGreen Character created
+"Realm Server" -> Client: CPktStream<126,5>
+else #Pink Failure
+"Realm Server" -> Client: oaPktCharacterFailure
+end
+Client --> User: Done
+end
+
+group Delete character
+User -> Client: Delete character
+Client -> "Realm Server": oaPktCharacterDelete
+alt#LightGreen Character created
+"Realm Server" -> Client: oaPktCharacterDeleteSuccess
+else #Pink Failure
+"Realm Server" -> Client: oaPktCharacterFailure
+end
+Client --> User: Done
+end
+
+group Select character
+User -> Client: Select character
+
+Client -> "Realm Server": oaPktRequestSelectWorld
+"Realm Server" -> Client: oaPktResponseSelectWorld
+Client -> "Realm Server": oaPktCharacterSelect
+alt#LightGreen Character selected
+"Realm Server" -> Client: oaPktCharacterSelectSuccess
+else #Pink Failure
+"Realm Server" -> Client: oaPktCharacterFailure
+end
+Client ->> "Realm Server": disconnect
+destroy "Realm Server"
+end
+
+hnote across: Continue with join sequence...
+
+@enduml

@@ -6,4 +6,13 @@ packets:
     subId: 0x0a
     inherit: CPkt
     fields:
-      - type: u32
+      - name: errorCode
+        type: 
+          name: u32
+          enum:
+            0: nameInvalid
+            1: nameExists
+            2: databaseError
+            3: characterLimit
+            4: characterInvalid
+            5: serverOffline

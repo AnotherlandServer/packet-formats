@@ -7,6 +7,6 @@ packets:
     inherit: CPkt
     fields:
       - type: u16
-        name: world_id
+        name: worldId
       - type: u16
       - type: uuid
