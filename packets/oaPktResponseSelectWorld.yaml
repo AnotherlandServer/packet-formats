@@ -5,5 +5,13 @@ subId: 0x0c
 inherit: CPkt
 fields:
   - type: bool
-  - type: u32
+    name: success
+  - name: errorCode
+    type:
+      name: u32
+      enum:
+        0: noError
+        3: characterLimit
+        5: serverOffline
+        7: largeQueue
   - type: :Uuid
