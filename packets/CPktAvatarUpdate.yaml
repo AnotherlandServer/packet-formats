@@ -23,7 +23,7 @@ packets:
                 name: name
               - type: u32
                 name: classId
-              - type: :Uuid
+              - type: uuid
               - type: u8
                 name: flags
               - branch:
@@ -31,21 +31,21 @@ packets:
                   test_flag: 8
                   isTrue:
                     fields:
-                    - type: :Uuid
+                    - type: uuid
                       name: flag_8_uuid
               - branch:
                   field: flags
                   test_flag: 4
                   isTrue:
                     fields:
-                    - type: :Uuid 
+                    - type: uuid 
                       name: flag_4_uuid
               - branch:
                   field: flags
                   test_flag: 2
                   isTrue:
                     fields:
-                    - type: :Uuid 
+                    - type: uuid 
                       name: flag_2_uuid
               - name: moveMgrBytes
                 type: u32

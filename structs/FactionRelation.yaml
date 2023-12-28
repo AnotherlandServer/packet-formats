@@ -3,6 +3,6 @@
 structures:
   FactionRelation:
     fields:
-      - type: :Uuid
+      - type: uuid
       - type: cstring
       - type: f32

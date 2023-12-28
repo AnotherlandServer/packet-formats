@@ -156,7 +156,7 @@ $defs:
         description: >
           This is an intrinsic type, not directly defined by the packet
           description document. See README for details.
-        enum: [bool, cstring, wstring, u8, u16, u32, u64, i8, i16, i32, i64, f32, f64, nativeparam]
+        enum: [bool, cstring, wstring, u8, u16, u32, u64, i8, i16, i32, i64, f32, f64, nativeparam, uuid]
       - type: string
         description: >
           This is a user defined type that should appear in a 'structures'

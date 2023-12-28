@@ -7,7 +7,7 @@ packets:
     inherit: CPkt
     fields:
       - type: u64
-      - type: :Uuid
+      - type: uuid
       - type: bool
       - type: f64
       - type: f64

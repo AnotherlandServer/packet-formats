@@ -26,4 +26,4 @@ packets:
           field: hasGuid
           isTrue:
             fields:
-            - type: :Uuid
+            - type: uuid

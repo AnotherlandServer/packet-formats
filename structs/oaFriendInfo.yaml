@@ -11,4 +11,4 @@ structures:
       - type: u32
       - type: u32
       - type: bool
-      - type: :Uuid
+      - type: uuid

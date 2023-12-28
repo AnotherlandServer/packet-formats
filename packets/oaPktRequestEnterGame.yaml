@@ -6,7 +6,7 @@ packets:
     subId: 0x00
     inherit: CPkt
     fields:
-      - type: :Uuid
+      - type: uuid
         name: sessionId
       - name: magicBytes
         type: { name: array, len: 16, type: u8 }

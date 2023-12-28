@@ -10,6 +10,6 @@ packets:
       - type: u32 # ignored by client
       - type: u32
         name: state
-      - type: :Uuid # ignored by client
+      - type: uuid # ignored by client
       - type: cstring # ignored by client
       - type: cstring # ignored by client

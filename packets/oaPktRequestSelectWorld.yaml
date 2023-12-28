@@ -9,4 +9,4 @@ packets:
       - type: u16
         name: world_id
       - type: u16
-      - type: :Uuid
+      - type: uuid

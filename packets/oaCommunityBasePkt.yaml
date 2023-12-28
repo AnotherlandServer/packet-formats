@@ -6,7 +6,7 @@ packets:
     subId: 0
     inherit: CPkt
     fields:
-      - type: :Uuid
+      - type: uuid
       - type: cstring
       - type: nativeparam
       - type: u32

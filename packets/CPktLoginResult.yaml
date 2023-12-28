@@ -43,7 +43,7 @@ packets:
             - name: username
               type: cstring
             - name: sessionId
-              type: :Uuid
+              type: uuid
           isFalse:
             fields:
             - name: messageLen

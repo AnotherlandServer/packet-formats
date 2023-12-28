@@ -13,4 +13,4 @@ packets:
       - name: worldPort
         type: u16
       - name: sessionId
-        type: :Uuid
+        type: uuid

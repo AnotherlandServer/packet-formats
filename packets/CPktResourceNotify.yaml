@@ -11,5 +11,5 @@ packets:
           name: u16
           enum:
             0: WorldDef
-      - type: :Uuid
+      - type: uuid
       - type: cstring

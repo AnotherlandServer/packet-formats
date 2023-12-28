@@ -8,4 +8,4 @@ packets:
     fields:
       - type: bool
       - type: u32
-      - type: :Uuid
+      - type: uuid
