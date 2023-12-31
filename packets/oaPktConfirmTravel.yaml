@@ -1,13 +1,15 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0x8c
-subId: 0x92
-inherit: CPkt
-fields:
-  - type: u64 # ignored by client
-  - type: u32 # ignored by client
-  - type: u32
-    name: state
-  - type: :Uuid # ignored by client
-  - type: cstring # ignored by client
-  - type: cstring # ignored by client
+packets:
+  oaPktConfirmTravel:
+    id: 0x8c
+    subId: 0x92
+    inherit: CPkt
+    fields:
+      - type: u64 # ignored by client
+      - type: u32 # ignored by client
+      - type: u32
+        name: state
+      - type: uuid # ignored by client
+      - type: cstring # ignored by client
+      - type: cstring # ignored by client

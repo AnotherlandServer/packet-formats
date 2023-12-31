@@ -1,14 +1,15 @@
-# yaml-language-server: $schema=../otherland.struct.schema.yaml
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-fields:
-  - name: version
-    type: u32
-  - name: vendorID
-    type: cstring
-  - name: vendorName
-    type: cstring
-  - name: skuList
-    type: cstring
-  - name: bundleList
-    type: cstring
-  
+structures:
+  CashItemVendorEntry:
+    fields:
+      - name: version
+        type: u32
+      - name: vendorID
+        type: cstring
+      - name: vendorName
+        type: cstring
+      - name: skuList
+        type: cstring
+      - name: bundleList
+        type: cstring

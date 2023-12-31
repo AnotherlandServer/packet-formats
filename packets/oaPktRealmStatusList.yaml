@@ -1,10 +1,13 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
-id: 0xa4
-subId: 0x00
-inherit: CPkt
-fields:
-  - name: realmCount
-    type: u32
-    # this section will be repeated per realm
-  - type: { name: array, len: realmCount, type: :RealmStatus }
-    name: realms
+
+packets:
+  oaPktRealmStatusList:
+    id: 0xa4
+    subId: 0x00
+    inherit: CPkt
+    fields:
+      - name: realmCount
+        type: u32
+        # this section will be repeated per realm
+      - type: { name: array, len: realmCount, type: :RealmStatus }
+        name: realms

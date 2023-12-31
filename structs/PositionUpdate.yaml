@@ -1,9 +1,11 @@
-# yaml-language-server: $schema=../otherland.struct.schema.yaml
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-fields:
-  - name: pos
-    type: :NetworkVec3
-  - name: rot
-    type: :NetworkVec4
-  - name: vel
-    type: :NetworkVec3
+structures:
+  PositionUpdate:
+    fields:
+      - name: pos
+        type: :NetworkVec3
+      - name: rot
+        type: :NetworkVec4
+      - name: vel
+        type: :NetworkVec3

@@ -1,10 +1,12 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0x8c
-subId: 0x21
-inherit: CPkt
-fields:
-  - name: itemCount
-    type: u32
-  - name: items
-    type: { name: array, len: itemCount, type: :CashItemRequestEntry }
+packets:
+  oaPktCashItemVendorSyncRequest:
+    id: 0x8c
+    subId: 0x21
+    inherit: CPkt
+    fields:
+      - name: itemCount
+        type: u32
+      - name: items
+        type: { name: array, len: itemCount, type: :CashItemRequestEntry }

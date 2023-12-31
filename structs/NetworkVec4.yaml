@@ -1,11 +1,13 @@
-# yaml-language-server: $schema=../otherland.struct.schema.yaml
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-fields:
-  - name: 'x'
-    type: f32
-  - name: 'y'
-    type: f32
-  - name: 'z'
-    type: f32
-  - name: 'w'
-    type: f32
+structures:
+  NetworkVec4:
+    fields:
+      - name: 'x'
+        type: f32
+      - name: 'y'
+        type: f32
+      - name: 'z'
+        type: f32
+      - name: 'w'
+        type: f32

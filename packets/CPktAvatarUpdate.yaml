@@ -1,57 +1,59 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0x24 
-subId: 0x0
-inherit: CPkt
-fields:
-  - name: fullUpdate
-    type: bool
-  - branch:
-      field: fullUpdate
-      isFalse:
-        fields:
-          - name: avatarId
-            type: u64
-      isTrue:
-        fields:
-          - type: bool
-          - name: avatarId
-            type: u64
-          - type: cstring
-            name: name
-          - type: u32
-            name: classId
-          - type: :Uuid
-          - type: u8
-            name: flags
-          - branch:
-              field: flags
-              test_flag: 8
-              isTrue:
-                fields:
-                - type: :Uuid
-                  name: flag_8_uuid
-          - branch:
-              field: flags
-              test_flag: 4
-              isTrue:
-                fields:
-                - type: :Uuid 
-                  name: flag_4_uuid
-          - branch:
-              field: flags
-              test_flag: 2
-              isTrue:
-                fields:
-                - type: :Uuid 
-                  name: flag_2_uuid
-          - name: moveMgrBytes
-            type: u32
-          - type: { name: array, len: moveMgrBytes, type: u8 }
-            name: moveMgrData
-  - type: u16
-    name: updateSource
-  - name: paramBytes
-    type: u32
-  - type: { name: array, len: paramBytes, type: u8 }
-    name: params
+packets:
+  CPktAvatarUpdate:
+    id: 0x24
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - name: fullUpdate
+        type: bool
+      - branch:
+          field: fullUpdate
+          isFalse:
+            fields:
+              - name: avatarId
+                type: u64
+          isTrue:
+            fields:
+              - type: bool
+              - name: avatarId
+                type: u64
+              - type: cstring
+                name: name
+              - type: u32
+                name: classId
+              - type: uuid
+              - type: u8
+                name: flags
+              - branch:
+                  field: flags
+                  test_flag: 8
+                  isTrue:
+                    fields:
+                    - type: uuid
+                      name: flag_8_uuid
+              - branch:
+                  field: flags
+                  test_flag: 4
+                  isTrue:
+                    fields:
+                    - type: uuid 
+                      name: flag_4_uuid
+              - branch:
+                  field: flags
+                  test_flag: 2
+                  isTrue:
+                    fields:
+                    - type: uuid 
+                      name: flag_2_uuid
+              - name: moveMgrBytes
+                type: u32
+              - type: { name: array, len: moveMgrBytes, type: u8 }
+                name: moveMgrData
+      - type: u16
+        name: updateSource
+      - name: paramBytes
+        type: u32
+      - type: { name: array, len: paramBytes, type: u8 }
+        name: params

@@ -1,10 +1,12 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0x1a 
-subId: 0x0
-inherit: CPkt
-fields:
-  - name: len
-    type: u32
-  - name: data
-    type: { name: array, len: len, type: u8 }
+packets:
+  CPktAggregated:
+    id: 0x1a
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - name: len
+        type: u32
+      - name: data
+        type: { name: array, len: len, type: u8 }

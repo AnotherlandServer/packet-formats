@@ -1,14 +1,16 @@
-# yaml-language-server: $schema=../otherland.struct.schema.yaml
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-fields:
-  - name: id
-    type: u32
-  - name: name
-    type: cstring
-  - name: worldId
-    type: u32
-  - type: u32
-    name: length
-  - name: params
-    type: { name: array, len: length, type: u8 }
-  - type: u16
+structures:
+  oaCharacter:
+    fields:
+      - name: id
+        type: u32
+      - name: name
+        type: cstring
+      - name: worldId
+        type: u32
+      - type: u32
+        name: length
+      - name: params
+        type: { name: array, len: length, type: u8 }
+      - type: u16
