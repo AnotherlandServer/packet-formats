@@ -1,14 +1,16 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0x7e
-subId: 0x09
-inherit: CPkt
-fields:
-  - type: u32
-  - type: u32
-  - name: worldIp
-    type: u32
-  - name: worldPort
-    type: u16
-  - name: sessionId
-    type: :Uuid
+packets:
+  oaPktCharacterSelectSuccess:
+    id: 0x7e
+    subId: 0x09
+    inherit: CPkt
+    fields:
+      - type: u32
+      - type: u32
+      - name: worldIp
+        type: u32
+      - name: worldPort
+        type: u16
+      - name: sessionId
+        type: uuid

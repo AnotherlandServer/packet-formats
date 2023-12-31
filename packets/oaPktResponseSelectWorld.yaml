@@ -1,17 +1,19 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0x7e
-subId: 0x0c
-inherit: CPkt
-fields:
-  - type: bool
-    name: success
-  - name: errorCode
-    type:
-      name: u32
-      enum:
-        0: noError
-        3: characterLimit
-        5: serverOffline
-        7: largeQueue
-  - type: :Uuid
+packets:
+  oaPktResponseSelectWorld:
+    id: 0x7e
+    subId: 0x0c
+    inherit: CPkt
+    fields:
+      - type: bool
+        name: success
+      - name: errorCode
+        type:
+          name: u32
+          enum:
+            0: noError
+            3: characterLimit
+            5: serverOffline
+            7: largeQueue
+      - type: uuid

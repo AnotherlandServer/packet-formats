@@ -1,10 +1,12 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0x8c
-subId: 0x2
-inherit: CPkt
-fields:
-  - type: u64
-  - type: u64
-  - type: cstring
-  - type: nativeparam
+packets:
+  oaPktAvatarTellBehaviorBinary:
+    id: 0x8c
+    subId: 0x2
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: u64
+      - type: cstring
+      - type: nativeparam

@@ -1,10 +1,12 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0 # No real id. CPkt is only ever used as base for other packets
-subId: 0
-fields:
-  - type: u64
-  - type: :Uuid
-  - type: cstring
-  - type: nativeparam
-  - type: u32
+packets:
+  oaCommunityPktBase:
+    id: 0 # No real id. oaCommunityPktBase is only ever used as base for other packets
+    subId: 0
+    inherit: CPkt
+    fields:
+      - type: uuid
+      - type: cstring
+      - type: nativeparam
+      - type: u32

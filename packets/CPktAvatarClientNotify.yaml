@@ -1,10 +1,12 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0x2d 
-subId: 0x0
-inherit: CPkt
-fields:
-  - type: u64
-    name: avatarId
-  - type: u16
-    name: alwaysZero
+packets:
+  CPktAvatarClientNotify:
+    id: 0x2d
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: u64
+        name: avatarId
+      - type: u16
+        name: alwaysZero

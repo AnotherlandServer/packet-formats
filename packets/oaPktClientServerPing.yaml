@@ -1,16 +1,18 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0x8c 
-subId: 0x32
-inherit: CPkt
-fields:
-  - type: u64
-  - type: :Uuid
-  - type: bool
-  - type: f64
-  - type: f64
-  - type: f64
-  - type: f64
-  - type: f64
-  - type: f64
-  - type: u32
+packets:
+  oaPktClientServerPing:
+    id: 0x8c
+    subId: 0x32
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: uuid
+      - type: bool
+      - type: f64
+      - type: f64
+      - type: f64
+      - type: f64
+      - type: f64
+      - type: f64
+      - type: u32

@@ -1,23 +1,25 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
-id: 0x8c
-subId: 0x20
-inherit: CPkt
-fields:
-  - type: u32
-  - name: skuItemCount
-    type: u32
-  - name: skuItems
-    type: { name: array, len: skuItemCount, type: :CashItemSKUItemEntry }
-  - name: bundleItemCount
-    type: u32
-  - name: bundleItems
-    type: { name: array, len: bundleItemCount, type: :CashItemSKUBundleEntry }
-  - name: deletedItemsCount
-    type: u32
-  - name: deletedItemIds
-    type: { name: array, len: deletedItemsCount, type: cstring }
-  - name: deletedBundlesCount
-    type: u32
-  - name: deletedBundleIds
-    type: { name: array, len: deletedBundlesCount, type: cstring }
+packets:
+  oaPktSKUBundleSyncAcknowledge:
+    id: 0x8c
+    subId: 0x20
+    inherit: CPkt
+    fields:
+      - type: u32
+      - name: skuItemCount
+        type: u32
+      - name: skuItems
+        type: { name: array, len: skuItemCount, type: :CashItemSKUItemEntry }
+      - name: bundleItemCount
+        type: u32
+      - name: bundleItems
+        type: { name: array, len: bundleItemCount, type: :CashItemSKUBundleEntry }
+      - name: deletedItemsCount
+        type: u32
+      - name: deletedItemIds
+        type: { name: array, len: deletedItemsCount, type: cstring }
+      - name: deletedBundlesCount
+        type: u32
+      - name: deletedBundleIds
+        type: { name: array, len: deletedBundlesCount, type: cstring }
