@@ -84,6 +84,28 @@ The `struct` type additionally is the default datatype assumed for the first fie
 ```
 
 ### Type ID 7: uuid
+```
+ 0               1                               17
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Type ID: 7    | COM/OLE style UUID            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
+
+All inividual fields of the UUID are encoded little-endian.
+
+```
+0                1                 2                 3               4
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| time_low                                                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| time_mid                        | time_hi_and_version             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| clock_seq_hi  | clock_seq_lo    | node                            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| node                                                              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
+
 ### Type ID 8: avatar-id
 ```
  0               1               8               9
@@ -166,7 +188,35 @@ A dynamic buffer, prefixed by a length attribute.
 ```
 
 ### Type ID 16: uuid-array
+```
+ 0               1               2               3               4               5               n
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Type ID: 16   | uint32 (element count)                                        | element count uuids ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
+
+The `uuid` elements are encoded similar to type id 7 `uuid`, excluding the type id property.
+
 ### Type ID 17: c-string-array
+```
+ 0               1               2               3               4               5               n
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| Type ID: 17   | uint32 (element count)                                        | element count c-strings ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
+
+The `c-string` elements are encoded similar to type id 5 `c-string`, excluding the type id property.
+
+```
+ 0               1               2               3               n               
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| uint16 (element 1 length)     | length ASCII characters ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+| uint16 (element 2 length)     | length ASCII characters ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+...
+```
+
 
 # Examples
 For clarity this section draws the nativeparam structures in a tree-like fashion, omitting the byte count of the previous diagram. Examples are taken from real client requests.
