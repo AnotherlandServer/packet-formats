@@ -114,14 +114,14 @@ All inividual fields of the UUID are encoded little-endian.
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 
-The avatar-id is encoded as an unsigned 64-bit integer. The least significant nibble does encode
+The avatar-id is encoded as an unsigned 64-bit integer. The least significant byte does encode
 the type of the avatar. `1` denotes a player character, `2` an npc. Other types might be unearthed in the future.
 
 ```
  0               1               2               3               4               5               6               7
  0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7 0 1 2 3 4 5 6 7
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-| Type  | Avatar id                                                                                             |
+| Type          | Avatar id                                                                                     |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 
