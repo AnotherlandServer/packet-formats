@@ -17,7 +17,7 @@ The packet definitions make use of same basic data types not directly defined by
 - **f32, f64**: Single and double precision little endian IEEE 754 floating point numbers.
 - **cstring**: ANSI string of single byte characters, prefixed by its length in bytes encoded as a two byte little endian integer, has no terminating null character.
 - **wstring**: Wide string of two byte UTF-16 characters, prefixed by its length in bytes encoded as a two byte little endian integer, has no terminating null character.
-- **nativeparam**: Atlas param object, whose format is described by `paramlist.ini`.
+- **nativeparam**: An Otherland specific structured data type. (See: [Nativeparam format](doc/nativeparam.md))
 - **uuid**: A standard 128 bit, COM/OLE style, little endian Universally Unique Identifier.
 
 The documents may also contain custom user defined data types and arrays of intrinsics or user defined types. These should be represented by appropriate data structures in the target language.
