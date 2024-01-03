@@ -9,15 +9,15 @@ packets:
       - name: notifyType
         type:
           name: u16
-          enum: {}
-          #  0: SyncGameClock
-          #  2: Message_2
-          #  3: Message_3
-          #  4: Message_4
-          #  5: Message_5
-          #  6: Message_6
-          #  7: Message_7
-          #  19: SyncRealmTime
+          enum:
+            0: SyncGameClock
+            2: Message_2
+            3: Message_3
+            4: Message_4
+            5: Message_5
+            6: Message_6
+            7: Message_7
+            19: SyncRealmTime
       - branch:
           field: notifyType
           test_equal: 0
