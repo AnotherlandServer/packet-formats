@@ -6,10 +6,8 @@ packets:
     subId: 0x0
     inherit: CPkt
     fields:
-      - name: len
-        type: u32
       - name: data
-        type: { name: array, len: len, type: u8 }
+        type: :Buffer
   CPktAvatarClientNotify:
     description: >
       Tells the client to despawn the avatar with the given avatarId.
@@ -67,15 +65,11 @@ packets:
                     fields:
                     - type: uuid 
                       name: flag_2_uuid
-              - name: moveMgrBytes
-                type: u32
-              - type: { name: array, len: moveMgrBytes, type: u8 }
-                name: moveMgrData
+              - type: :Buffer
+                name: movement
       - type: u16
         name: updateSource
-      - name: paramBytes
-        type: u32
-      - type: { name: array, len: paramBytes, type: u8 }
+      - type: :Buffer
         name: params
   CPktStackedAvatarUpdate:
     id: 0x27
@@ -83,10 +77,8 @@ packets:
     inherit: CPkt
     fields:
       - type: u64
-      - name: len
-        type: u32
-      - name: data
-        type: { name: array, len: len, type: u8 }
+      - type: :Buffer
+        name: params
   CPktRequestAvatarBehaviors:
     id: 0x35
     subId: 0x0

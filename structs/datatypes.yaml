@@ -19,3 +19,9 @@ structures:
         type: f32
       - name: 'w'
         type: f32
+  Buffer:
+    fields:
+      - name: len
+        type: u32
+      - name: data
+        type: { name: array, len: len, type: u8 }

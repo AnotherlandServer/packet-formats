@@ -33,14 +33,10 @@ packets:
         type: u64
       - name: classId
         type: u32
-      - name: paramBytes
-        type: u32
       - name: params
-        type: { name: array, len: paramBytes, type: u8 }
-      - name: movementBytes
-        type: u32
+        type: :Buffer
       - name: movement
-        type: { name: array, len: movementBytes, type: u8 }
+        type: :Buffer
       - name: hasGuid
         type: bool
       - branch:

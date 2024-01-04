@@ -116,8 +116,6 @@ structures:
         type: cstring
       - name: worldId
         type: u32
-      - type: u32
-        name: length
       - name: params
-        type: { name: array, len: length, type: u8 }
+        type: :Buffer
       - type: u16
