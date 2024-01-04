@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  oaPktFactionRequest:
+    id: 0x8c
+    subId: 0x43
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: u8
+      - type: nativeparam
+  oaPktFactionResponse:
+    id: 0x8c
+    subId: 0x44
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: u8
+      - type: nativeparam
+structures:
+  FactionRelation:
+    fields:
+      - type: uuid
+      - type: cstring
+      - type: f32
+  FactionRelationList:
+    fields:
+      - type: u32
+        name: count
+      - type: { name: array, type: :FactionRelation, len: count }
+        name: factions

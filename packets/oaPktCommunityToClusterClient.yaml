@@ -1,7 +1,0 @@
-# yaml-language-server: $schema=../otherland.packet.schema.yaml
-
-packets:
-  oaPktCommunityToClusterClient:
-    id: 0x8c
-    subId: 0x8
-    inherit: oaCommunityPktBase

@@ -1,9 +1,0 @@
-# yaml-language-server: $schema=../otherland.packet.schema.yaml
-
-structures:
-  FactionRelationList:
-    fields:
-      - type: u32
-        name: count
-      - type: { name: array, type: :FactionRelation, len: count }
-        name: factions

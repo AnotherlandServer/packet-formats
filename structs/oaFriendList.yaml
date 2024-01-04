@@ -1,9 +1,0 @@
-# yaml-language-server: $schema=../otherland.packet.schema.yaml
-
-structures:
-  oaFriendList:
-    fields:
-      - name: count
-        type: u32
-      - name: friends
-        type: { name: array, len: count, type: :oaFriendInfo }

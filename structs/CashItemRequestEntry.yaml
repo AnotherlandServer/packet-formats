@@ -1,9 +1,0 @@
-# yaml-language-server: $schema=../otherland.packet.schema.yaml
-
-structures:
-  CashItemRequestEntry:
-    fields:
-      - type: cstring
-        name: id
-      - type: u32
-        name: version

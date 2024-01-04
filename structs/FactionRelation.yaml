@@ -1,8 +1,0 @@
-# yaml-language-server: $schema=../otherland.packet.schema.yaml
-
-structures:
-  FactionRelation:
-    fields:
-      - type: uuid
-      - type: cstring
-      - type: f32

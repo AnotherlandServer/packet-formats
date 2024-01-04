@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  oaPktMoveManagerPosUpdate:
+    id: 0xad
+    subId: 0x01
+    inherit: CPkt
+    fields:
+      - name: pos
+        type: :NetworkVec3
+      - name: rot
+        type: :NetworkVec4
+      - name: vel
+        type: :NetworkVec3
+      - type: u8
+      - type: u16
+      - type: u64
+      - type: u64
+  oaPktMoveManagerStateChanged:
+    id: 0xad
+    subId: 0x00
+    inherit: CPkt
+    fields:
+      - type: u8
+      - type: u16
+      - type: u32
+      - type: u8
+      - type: u16
+      - type: u64

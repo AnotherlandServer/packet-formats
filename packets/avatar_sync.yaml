@@ -1,6 +1,26 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
 packets:
+  CPktAggregated:
+    id: 0x1a
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - name: len
+        type: u32
+      - name: data
+        type: { name: array, len: len, type: u8 }
+  CPktAvatarClientNotify:
+    description: >
+      Tells the client to despawn the avatar with the given avatarId.
+    id: 0x2d
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: u64
+        name: avatarId
+      - type: u16
+        name: alwaysZero
   CPktAvatarUpdate:
     id: 0x24
     subId: 0x0
@@ -57,3 +77,31 @@ packets:
         type: u32
       - type: { name: array, len: paramBytes, type: u8 }
         name: params
+  CPktStackedAvatarUpdate:
+    id: 0x27
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: u64
+      - name: len
+        type: u32
+      - name: data
+        type: { name: array, len: len, type: u8 }
+  CPktRequestAvatarBehaviors:
+    id: 0x35
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: bool
+      - type: cstring
+      - type: cstring
+  oaPktAvatarTellBehaviorBinary:
+    id: 0x8c
+    subId: 0x2
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: u64
+      - type: cstring
+      - type: nativeparam

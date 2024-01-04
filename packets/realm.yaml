@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:  
+  oaPktSendMsgToRealm:
+    id: 0x7e
+    subId: 0x0d
+    inherit: CPkt
+    fields:
+      - name: message
+        type: cstring
+  oaPktRealmSelect:
+    id: 0xa4
+    subId: 0x01
+    inherit: CPkt
+    fields:
+      - type: u32
+      - type: u32
+  oaPktRealmStatusList:
+    id: 0xa4
+    subId: 0x00
+    inherit: CPkt
+    fields:
+      - name: realmCount
+        type: u32
+        # this section will be repeated per realm
+      - type: { name: array, len: realmCount, type: :RealmStatus }
+        name: realms
+structures:
+  RealmStatus:
+    fields:
+      - name: id
+        type: u32
+      - name: name
+        type: cstring
+      - name: channelCount
+        type: u32
+      - type: { name: array, len: channelCount, type: u32 }
+        name: channelId
+      - name: channelPopulationCount
+        type: u32
+      - type: { name: array, len: channelPopulationCount, type: f32 }
+        name: channelPopulation

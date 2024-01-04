@@ -1,9 +1,0 @@
-# yaml-language-server: $schema=../otherland.packet.schema.yaml
-
-structures:
-  oaCharacterList:
-    fields:
-      - name: count
-        type: u32
-      - name: characters
-        type: { name: array, len: count, type: :oaCharacter }

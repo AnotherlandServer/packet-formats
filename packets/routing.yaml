@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  oaPktClientToClusterNode:
+    id: 0x8c
+    subId: 0x47
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: u8
+      - type: nativeparam
+  oaCommunityPktBase:
+    id: 0 # No real id. oaCommunityPktBase is only ever used as base for other packets
+    subId: 0
+    inherit: CPkt
+    fields:
+      - type: uuid
+      - type: cstring
+      - type: nativeparam
+      - type: u32
+  oaPktClusterClientToCommunication:
+    id: 0x8c
+    subId: 0x49
+    inherit: oaCommunityPktBase
+  oaPktClusterClientToCommunity:
+    id: 0x8c
+    subId: 0x9
+    inherit: oaCommunityPktBase
+  oaPktClusterNodeToClient:
+    id: 0x8c
+    subId: 0x48
+    inherit: oaCommunityPktBase
+  oaPktCommunicationToClusterClient:
+    id: 0x8c
+    subId: 0x4a
+    inherit: oaCommunityPktBase
+  oaPktCommunityToClusterClient:
+    id: 0x8c
+    subId: 0x8
+    inherit: oaCommunityPktBase
+  CPktRouted:
+    description: >
+      Wraps another otherland packet inside.
+    id: 0x77
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: u8
+      - type: u8
+      - type: u64
+      - type: { name: array, len: _remainder, type: u8 }

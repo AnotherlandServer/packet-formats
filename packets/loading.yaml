@@ -1,6 +1,27 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
 packets:
+  oaPktRequestEnterGame:
+    id: 0xa8
+    subId: 0x00
+    inherit: CPkt
+    fields:
+      - type: uuid
+        name: sessionId
+      - name: magicBytes
+        type: { name: array, len: 16, type: u8 }
+  CPktResourceNotify:
+    id: 0x33
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - name: resourceType
+        type: 
+          name: u16
+          enum:
+            0: WorldDef
+      - type: uuid
+      - type: cstring
   CPktBlob:
     id: 0x23
     subId: 0x0
@@ -27,3 +48,17 @@ packets:
           isTrue:
             fields:
             - type: uuid
+  oaPktS2XConnectionState:
+    id: 0x94
+    subId: 0x1
+    inherit: CPkt
+    fields:
+      - type: u32
+      - type: u64
+  oaPktC2SConnectionState:
+    id: 0x94
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: u32
+      - type: u64

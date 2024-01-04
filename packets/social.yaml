@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  CPktChannelChat:
+    id: 0x3e
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: cstring
+        name: channel
+      - type: cstring
+        name: message
+  CPktChat:
+    id: 0x3d
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - name: chat_type
+        type:
+          name: u8
+          enum:
+            0: party
+            1: say
+            3: clan
+            4: officer
+            5: whisper
+            6: shout
+      - type: u64
+      - type: cstring
+        name: sender
+      - type: cstring
+        name: receiver
+      - type: cstring
+        name: message
+  oaPktFriendRequest:
+    id: 0xa7
+    subId: 0x2
+    inherit: CPkt
+    fields:
+      - type: cstring
+      - type: u32
+      - type: u32
+  CPktStream_167_0:
+    id: 0xa7
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - name: friendList
+        type: :oaFriendList
+structures:
+  oaFriendInfo:
+    fields:
+      - type: u32
+      - type: u64
+      - type: cstring
+      - type: u32
+      - type: u32
+      - type: u32
+      - type: u32
+      - type: bool
+      - type: uuid
+  oaFriendList:
+    fields:
+      - name: count
+        type: u32
+      - name: friends
+        type: { name: array, len: count, type: :oaFriendInfo }
