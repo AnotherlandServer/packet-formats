@@ -12,18 +12,55 @@ packets:
         type: :NetworkVec4
       - name: vel
         type: :NetworkVec3
-      - type: u8
-      - type: u16
-      - type: u64
-      - type: u64
+      - name: physicsState
+        type:
+          name: u8
+          enum:
+            0: unknown_0
+            1: standing
+            2: falling
+            224: unknown_224
+      - name: moverKey
+        type: u16
+      - name: avatarId
+        type: u64
+      - name: seconds
+        type: f64
   oaPktMoveManagerStateChanged:
     id: 0xad
     subId: 0x00
     inherit: CPkt
     fields:
       - type: u8
-      - type: u16
+      - name: moverKey
+        type: u16
       - type: u32
       - type: u8
-      - type: u16
+      - name: newVersion
+        type: u16
       - type: u64
+structures:
+  MoveManagerInit:
+    fields:
+      - name: pos
+        type: :NetworkVec3
+      - name: rot
+        type: :NetworkVec4
+      - name: vel
+        type: :NetworkVec3
+      - name: seconds
+        type: f64
+      - name: physicsState
+        type:
+          name: u8
+          enum:
+            1: standing
+            2: falling
+            224: unknown_224
+      - type: u8
+      - type: u8
+      - type: u16
+        name: moverKey
+      - type: u16
+        name: version
+      - type: f64
