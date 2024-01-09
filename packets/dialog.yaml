@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  oaPktDialogList:
+    id: 0xa6
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: u32
+      - type: u64
+      - type: u64
+      - type: uuid
+  oaPktDialogChoice:
+    id: 0xa6
+    subId: 0x1
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: u64
+      - type: u32
+      - type: cstring
+  oaPktDialogEnd:
+    id: 0xa6
+    subId: 0x4
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: u32
+  oaPktDialogDebug:
+    id: 0xa6
+    subId: 0x5
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: cstring
