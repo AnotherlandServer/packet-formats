@@ -12,14 +12,8 @@ packets:
         type: :NetworkVec4
       - name: vel
         type: :NetworkVec3
-      - name: physicsState
-        type:
-          name: u8
-          enum:
-            0: unknown_0
-            1: standing
-            2: falling
-            224: unknown_224
+      - name: physics
+        type: :Physics
       - name: moverKey
         type: u16
       - name: avatarId
@@ -40,6 +34,27 @@ packets:
         type: u16
       - type: u64
 structures:
+  Physics:
+    fields:
+      - name: state # physics states according to actor.uc
+        type:
+          name: u8
+          enum:
+            0: none
+            1: walking
+            2: falling
+            3: swimming
+            4: flying
+            5: rotating
+            6: projectile
+            7: interpolating
+            8: spider
+            9: ladder
+            10: rigidBody
+            11: softBody
+            13: unused
+            14: custom
+            15: splineSurfing
   MoveManagerInit:
     fields:
       - name: pos
@@ -50,13 +65,8 @@ structures:
         type: :NetworkVec3
       - name: seconds
         type: f64
-      - name: physicsState
-        type:
-          name: u8
-          enum:
-            1: standing
-            2: falling
-            224: unknown_224
+      - name: physics
+        type: :Physics
       - type: u8
       - type: u8
       - type: u16
