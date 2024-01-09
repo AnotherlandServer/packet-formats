@@ -32,3 +32,13 @@ packets:
         name: pos
       - type: :NetworkVec4
         name: rot
+  CPktTargetRequest:
+    id: 0x66
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - name: avatarId
+        type: u64
+      - name: targetAvatarId
+        type: u64
+      - type: u16
