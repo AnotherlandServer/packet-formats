@@ -84,9 +84,20 @@ packets:
     subId: 0x0
     inherit: CPkt
     fields:
-      - type: u64
+      - name: avatarId
+        type: u64
       - type: bool
-      - type: cstring
+      - name: behaviour
+        type: cstring
+      - name: data
+        type: cstring
+  oaPktAvatarTellBehavior:
+    id: 0x3a
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: u64
       - type: cstring
   oaPktAvatarTellBehaviorBinary:
     id: 0x8c
