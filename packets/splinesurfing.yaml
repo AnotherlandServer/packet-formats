@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  oaPkt_SplineSurfing_Acknowledge:
+    id: 0x99
+    subId: 0x01
+    inherit: CPkt
+    fields:
+      - name: avatarId
+        type: u64
+      - name: splineId
+        type: uuid
+      - name: acknowledged
+        type: bool
+      - name: inverseTravel
+        type: bool
+      - name: loc
+        type: :NetworkVec3
