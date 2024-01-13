@@ -118,4 +118,4 @@ structures:
         type: u32
       - name: params
         type: :Buffer
-      - type: u16
+      - type: u32
