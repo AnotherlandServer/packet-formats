@@ -1,3 +1,19 @@
+-- otherland.lua - A protocol dissector for otherland RakNet messages
+-- Copyright (C) 2024  Phil Lehmkuhl
+-- 
+-- This program is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+-- 
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+-- 
+-- You should have received a copy of the GNU General Public License
+-- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 local otherland_raknet = Proto("Otherland", "Otherland Raknet")
 local remote_time_field = ProtoField.uint32("otherland.raknet.remote_ime", "Remote Time", base.DEC)
 local ack_packet_field = ProtoField.uint32("otherland.raknet.ack", "Ack", base.DEC)
