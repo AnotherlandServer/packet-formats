@@ -49,3 +49,12 @@ packets:
       - type: u8
       - type: u64
       - type: { name: array, len: _remainder, type: u8 }
+  oaPktCheatingClusterNode:
+    id: 0x8c
+    subId: 0x35
+    inherit: CPkt
+    fields:
+      - name: avatarId
+        type: u64
+      - name: command
+        type: nativeparam
