@@ -25,14 +25,17 @@ packets:
     subId: 0x00
     inherit: CPkt
     fields:
-      - type: u8
+      - name: newMoverType # usually 1
+        type: u8
       - name: moverKey
         type: u16
-      - type: u32
-      - type: u8
+      - type: f32
+      - name: replica # usually 7
+        type: u8
       - name: newVersion
         type: u16
-      - type: u64
+      - name: avatarId
+        type: u64
 structures:
   Physics:
     fields:
@@ -55,7 +58,8 @@ structures:
             13: unused
             14: custom
             15: splineSurfing
-  MoveManagerInit:
+  # this describes the format of CPktBlob.movement and CPktAvatarUpdate.movement
+  MoveManagerInit: 
     fields:
       - name: pos
         type: :NetworkVec3
@@ -67,8 +71,10 @@ structures:
         type: f64
       - name: physics
         type: :Physics
-      - type: u8
-      - type: u8
+      - name: moverType
+        type: u8
+      - name: replica
+        type: u8
       - type: u16
         name: moverKey
       - type: u16
