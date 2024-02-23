@@ -16,7 +16,7 @@ The packet definitions make use of same basic data types not directly defined by
 - **i8, i16, i32, i64**: Signed little endian integers of 8, 16, 32, and 64 bits respectively.
 - **f32, f64**: Single and double precision little endian IEEE 754 floating point numbers.
 - **cstring**: ANSI string of single byte characters, prefixed by its length in bytes encoded as a two byte little endian integer, has no terminating null character.
-- **wstring**: Wide string of two byte UTF-16 characters, prefixed by its length in bytes encoded as a two byte little endian integer, has no terminating null character.
+- **wstring**: Wide string of two byte, little endian UTF-16 characters, prefixed by its length in characters encoded as a two byte little endian integer, has no terminating null character.
 - **nativeparam**: An Otherland specific structured data type. (See: [Nativeparam format](doc/nativeparam.md))
 - **uuid**: A standard 128 bit, COM/OLE style, little endian Universally Unique Identifier.
 
