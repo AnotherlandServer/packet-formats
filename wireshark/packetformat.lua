@@ -1,4 +1,4 @@
--- packet_format.lua - A template for dissectors generated from packet format definitions.
+-- packetformat.lua - A dissectors for packet format definitions.
 -- Copyright (C) 2024 Vince Kálmán
 -- 
 -- This program is free software: you can redistribute it and/or modify
