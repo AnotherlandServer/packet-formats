@@ -71,7 +71,11 @@ local function type_to_ftype(t)
         return primitive_type_to_ftype[t]
     elseif type(t) == "table" then
         if t.name == "array" then
-            return ftypes.NONE
+            if t.items == -1 then
+                return ftypes.BYTES
+            else
+                return ftypes.NONE
+            end
         else
             return type_to_ftype(t.name)
         end
@@ -317,18 +321,25 @@ local function dissect_field(tvb, tree, stash, field_ref)
                 array_len = field_len
             end
 
-            tree = tree:add(proto_field, tvb)
-
-            local new_tvb = tvb
-            for i=1,array_len do
-                local item_tree
-                new_tvb, item_tree = dissect_field(new_tvb, tree, stash, field_type.items)
-                item_tree:prepend_text("["..(i - 1).."] ")
+            if field_type.items == -1 then
+                check_len(tvb, array_len)
+                tree = tree:add(proto_field, tvb:range(0, array_len))
+                tvb = tvb_safe_offset(tvb, array_len)
+            else
+                tree = tree:add(proto_field, tvb)
+                
+                local new_tvb = tvb
+                for i=1,array_len do
+                    local item_tree
+                    new_tvb, item_tree = dissect_field(new_tvb, tree, stash, field_type.items)
+                    item_tree:prepend_text("["..(i - 1).."] ")
+                end
+                
+                tree:set_len(new_tvb:offset() - tvb:offset())
+                tvb = new_tvb
             end
 
-            tree:set_len(new_tvb:offset() - tvb:offset())
-
-            return new_tvb, tree
+            return tvb, tree
         else
             return dissect_with_lenght(tvb, tree, proto_field, field_type.name, field_stash)
         end
