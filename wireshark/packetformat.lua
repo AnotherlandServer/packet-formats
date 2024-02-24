@@ -408,20 +408,26 @@ end
 
 ---@param tvb TvbRange
 ---@param tree TreeItem
+---@param info Column
 ---@param packet_index number
 ---@return TvbRange,TreeItem
-local function dissect_packet(tvb, tree, packet_index)
+local function dissect_packet(tvb, tree, info, packet_index)
     local packet = format.packets[packet_index]
 
     local inherit = packet.inherit
     if inherit ~= nil then
-        tvb = dissect_packet(tvb, tree, inherit)
+        tvb = dissect_packet(tvb, tree, info, inherit)
     end
+
+    info:append(packet.name.." ")
 
     return dissect_fields_list(tvb, tree, packet_fields[packet_index], packet)
 end
 
 function proto.dissector(tvb, pinfo, tree)
+    pinfo.cols["protocol"]:set("Packet Format")
+    pinfo.cols["info"]:clear()
+
     local proto_tree = tree:add(proto, tvb:range())
 
     local success, message = pcall(function ()
@@ -438,7 +444,7 @@ function proto.dissector(tvb, pinfo, tree)
             error({expert = expert_bad_id})
         end
 
-        dissect_packet(tvb:range(2), proto_tree, by_id_sub)
+        dissect_packet(tvb:range(2), proto_tree, pinfo.cols["info"], by_id_sub)
     end)
 
     if not success then
