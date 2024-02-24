@@ -69,7 +69,7 @@ local function type_to_ftype(t)
         return primitive_type_to_ftype[t]
     elseif type(t) == "table" then
         if t.name == "array" then
-            return type_to_ftype(t.type)
+            return ftypes.NONE
         else
             return type_to_ftype(t.name)
         end
@@ -243,7 +243,7 @@ end
 ---@param tree TreeItem
 ---@param stash table
 ---@param field_ref number|table
----@return TvbRange
+---@return TvbRange,TreeItem
 local function dissect_field(tvb, tree, stash, field_ref)
     local field_index, field_len
     if type(field_ref) == "number" then
@@ -273,11 +273,11 @@ local function dissect_field(tvb, tree, stash, field_ref)
                 array_len = field_len
             end
 
-            local array_tree = tree:add(field_def.name, tvb)
+            tree = tree:add(proto_field, tvb)
 
             for i=1,array_len do
                 local item_tree
-                tvb, item_tree = dissect_simple(tvb, array_tree, proto_field, field_type.type, nil, nil)
+                tvb, item_tree = dissect_field(tvb, tree, stash, field_type.items)
                 item_tree:prepend_text("["..(i - 1).."] ")
             end
         else
@@ -287,7 +287,7 @@ local function dissect_field(tvb, tree, stash, field_ref)
         tvb, tree = dissect_simple(tvb, tree, proto_field, field_type, field_len, field_stash)
     end
 
-    return tvb
+    return tvb, tree
 end
 
 ---@param tvb TvbRange
