@@ -88,6 +88,11 @@ for k, v in ipairs(format.packets) do
     packet_fields[k] = ProtoField.new(v.name, proto_name..".packet."..v.name, ftypes.NONE)
 end
 
+local struct_fields = {}
+for k, v in ipairs(format.structures) do
+    struct_fields[k] = ProtoField.new(v.name, proto_name..".struct."..v.name, ftypes.NONE)
+end
+
 ---@param to table
 ---@param what table
 local function add_range(to, what)
@@ -101,6 +106,7 @@ end
 local all_fields = {}
 add_range(all_fields, fields)
 add_range(all_fields, packet_fields)
+add_range(all_fields, struct_fields)
 proto.fields = all_fields
 
 ---@param tvb Tvb|TvbRange
@@ -230,9 +236,8 @@ local function dissect_simple(tvb, tree, proto_field, field_type, field_len, sta
             return dissect_with_lenght(tvb, tree, proto_field, field_type, stash)
         end
     elseif type(field_type) == "number" then
-        local structure = format.structures[field_type]
-        local struct_tree = tree:add(structure.name, tvb)
-        tvb = dissect_fields_list(tvb, struct_tree, structure)
+        local struct_tree = tree:add(struct_fields[field_type], tvb)
+        tvb = dissect_fields_list(tvb, struct_tree, format.structures[field_type])
         return tvb, struct_tree
     end
 
