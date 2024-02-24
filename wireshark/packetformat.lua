@@ -255,7 +255,7 @@ local function dissect_string(tvb, tree, field, is_unicode, maxlen, stash)
     return tvb_safe_offset(tvb, 2 + len), string_tree
 end
 
----@type fun(tvb: TvbRange, tree: TreeItem, proto_field: ProtoField, fields_list: any): TvbRange,TreeItem
+---@type fun(tvb: TvbRange, tree: TreeItem, proto_field: ProtoField|string, fields_list: any): TvbRange,TreeItem
 local dissect_fields_list
 
 ---@param tvb TvbRange
@@ -339,7 +339,41 @@ end
 
 ---@param tvb TvbRange
 ---@param tree TreeItem
----@param proto_field ProtoField
+---@param stash table
+---@param branch table
+---@return TvbRange
+local function dissect_branch(tvb, tree, stash, branch)
+    local field_value = stash[branch.field]
+
+    local condition
+    if branch.test_equal ~= nil then
+        condition = (field_value == branch.test_equal)
+    elseif branch.test_flag ~= nil then
+        -- This won't work with 64 bit values, but the format definition literal also can't handle those right now.
+        condition = (bit32.band(field_value, branch.test_flag) == branch.test_flag)
+    else
+        condition = (field_value ~= 0)
+    end
+
+    if condition then
+        if branch.isTrue ~= nil then
+            tvb, tree = dissect_fields_list(tvb, tree, "True", branch.isTrue)
+        end
+    else
+        if branch.isFalse ~= nil then
+            tvb, tree = dissect_fields_list(tvb, tree, "False", branch.isFalse)
+        end
+    end
+
+    tree:set_generated(true)
+    tree:set_len(0)
+
+    return tvb
+end
+
+---@param tvb TvbRange
+---@param tree TreeItem
+---@param proto_field ProtoField|string
 ---@param fields_list any
 ---@return TvbRange,TreeItem
 function dissect_fields_list(tvb, tree, proto_field, fields_list)
@@ -349,8 +383,11 @@ function dissect_fields_list(tvb, tree, proto_field, fields_list)
 
     local new_tvb = tvb
     for k, v in ipairs(fields_list.fields) do
-        new_tvb = dissect_field(new_tvb, tree, stash, v)
-        -- TODO: branch
+        if type(v) == "table" and v.branch ~= nil then
+            new_tvb = dissect_branch(new_tvb, tree, stash, v.branch)
+        else
+            new_tvb = dissect_field(new_tvb, tree, stash, v)
+        end
     end
 
     tree:set_len(new_tvb:offset() - tvb:offset())
