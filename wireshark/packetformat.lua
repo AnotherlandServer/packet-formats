@@ -114,6 +114,40 @@ add_range(all_fields, packet_fields)
 add_range(all_fields, struct_fields)
 proto.fields = all_fields
 
+---@class FakeEmptyRange: TvbRange
+---@field offset_value number
+local FakeEmptyRange = {}
+FakeEmptyRange.__index = FakeEmptyRange
+
+---@param offset number
+---@return FakeEmptyRange
+function FakeEmptyRange:new(offset)
+    ---@type FakeEmptyRange
+    local instance = { offset_value = offset }
+    setmetatable(instance, self)
+    return instance
+end
+
+---@return number
+function FakeEmptyRange:len()
+    return 0
+end
+
+---@return number
+function FakeEmptyRange:offset()
+    return self.offset_value
+end
+
+---@param tvb TvbRange
+---@param offset number
+---@return TvbRange
+local function tvb_safe_offset(tvb, offset)
+    if offset < tvb:len() then
+        return tvb:range(offset)
+    end
+    return FakeEmptyRange:new(tvb:offset() + tvb:len())
+end
+
 ---@param tvb Tvb|TvbRange
 ---@param len number
 local function check_len(tvb, len)
@@ -177,7 +211,7 @@ local function dissect_with_lenght(tvb, tree, field, field_type, stash)
         stash[stash.put_here] = primitive_read[field_type](range)
     end
 
-    return tvb:range(len), new_tree
+    return tvb_safe_offset(tvb, len), new_tree
 end
 
 ---@param tvb TvbRange
@@ -218,7 +252,7 @@ local function dissect_string(tvb, tree, field, is_unicode, maxlen, stash)
         string_tree:add_proto_expert_info(expert_string_too_long)
     end
 
-    return tvb:range(2 + len), string_tree
+    return tvb_safe_offset(tvb, 2 + len), string_tree
 end
 
 ---@type fun(tvb: TvbRange, tree: TreeItem, proto_field: ProtoField, fields_list: any): TvbRange,TreeItem
