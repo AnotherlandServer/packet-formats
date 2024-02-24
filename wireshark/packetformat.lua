@@ -62,6 +62,8 @@ local primitive_type_to_ftype = {
     nativeparam = ftypes.NONE -- TODO
 }
 
+---@param t any
+---@return integer
 local function type_to_ftype(t)
     if type(t) == "number" then
         return ftypes.NONE
@@ -74,6 +76,8 @@ local function type_to_ftype(t)
             return type_to_ftype(t.name)
         end
     end
+
+    return ftypes.NONE
 end
 
 ---@type ProtoField[]
@@ -88,6 +92,7 @@ for k, v in ipairs(format.packets) do
     packet_fields[k] = ProtoField.new(v.name, proto_name..".packet."..v.name, ftypes.NONE)
 end
 
+---@type ProtoField[]
 local struct_fields = {}
 for k, v in ipairs(format.structures) do
     struct_fields[k] = ProtoField.new(v.name, proto_name..".struct."..v.name, ftypes.NONE)
@@ -132,6 +137,8 @@ local primitive_len = {
     uuid = 16
 }
 
+---@param n number
+---@return number
 local function sign_byte(n)
     if bit32.btest(n, 128) then
       return -1 * (bit32.band(bit32.bnot(n), 255) + 1)
