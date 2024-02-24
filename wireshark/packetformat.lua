@@ -28,6 +28,11 @@ local expert_end_of_packet = ProtoExpert.new(
     expert.group.MALFORMED, expert.severity.ERROR
 )
 
+local expert_not_end_of_packet = ProtoExpert.new(
+    proto_name.."exp.notendofpacket", "The packet was longer than expected, some data was not consumed.",
+    expert.group.UNDECODED, expert.severity.WARN
+)
+
 local expert_bad_id = ProtoExpert.new(
     proto_name..".exp.badid", "Unknown packet id.",
     expert.group.MALFORMED, expert.severity.ERROR
@@ -40,6 +45,7 @@ local expert_string_too_long = ProtoExpert.new(
 
 proto.experts = {
     expert_end_of_packet,
+    expert_not_end_of_packet,
     expert_bad_id,
     expert_string_too_long
 }
@@ -445,7 +451,11 @@ function proto.dissector(tvb, pinfo, tree)
             error({expert = expert_bad_id})
         end
 
-        dissect_packet(tvb:range(2), proto_tree, pinfo.cols["info"], by_id_sub)
+        tvb = dissect_packet(tvb:range(2), proto_tree, pinfo.cols["info"], by_id_sub)
+
+        if tvb:len() > 0 then
+            tree:add_proto_expert_info(expert_not_end_of_packet)
+        end
     end)
 
     if not success then
