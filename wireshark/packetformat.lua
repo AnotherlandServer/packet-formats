@@ -315,6 +315,7 @@ local function dissect_field(tvb, tree, stash, field_ref)
     if type(field_type) == "table" then
         if field_type.name == "array" then
             local array_len
+            ---@cast field_len -nil
             if field_len < 0 then
                 array_len = stash[field_len * -1]
             else
@@ -327,14 +328,14 @@ local function dissect_field(tvb, tree, stash, field_ref)
                 tvb = tvb_safe_offset(tvb, array_len)
             else
                 tree = tree:add(proto_field, tvb)
-                
+
                 local new_tvb = tvb
                 for i=1,array_len do
                     local item_tree
                     new_tvb, item_tree = dissect_field(new_tvb, tree, stash, field_type.items)
                     item_tree:prepend_text("["..(i - 1).."] ")
                 end
-                
+
                 tree:set_len(new_tvb:offset() - tvb:offset())
                 tvb = new_tvb
             end
