@@ -203,7 +203,7 @@ local function dissect_string(tvb, tree, field, is_unicode, maxlen, stash)
     end
 
     local value = ""
-    if len > 0 then 
+    if len > 0 then
         check_len(tvb, 2 + len)
         value = tvb:range(2, len):string(enc)
     end
@@ -221,7 +221,7 @@ local function dissect_string(tvb, tree, field, is_unicode, maxlen, stash)
     return tvb:range(2 + len), string_tree
 end
 
----@type fun(tvb: TvbRange, tree: TreeItem, fields_list: any): TvbRange
+---@type fun(tvb: TvbRange, tree: TreeItem, proto_field: ProtoField, fields_list: any): TvbRange,TreeItem
 local dissect_fields_list
 
 ---@param tvb TvbRange
@@ -243,9 +243,7 @@ local function dissect_simple(tvb, tree, proto_field, field_type, field_len, sta
             return dissect_with_lenght(tvb, tree, proto_field, field_type, stash)
         end
     elseif type(field_type) == "number" then
-        local struct_tree = tree:add(struct_fields[field_type], tvb)
-        tvb = dissect_fields_list(tvb, struct_tree, format.structures[field_type])
-        return tvb, struct_tree
+        return dissect_fields_list(tvb, tree, struct_fields[field_type], format.structures[field_type])
     end
 
     return tvb, tree
@@ -287,40 +285,49 @@ local function dissect_field(tvb, tree, stash, field_ref)
 
             tree = tree:add(proto_field, tvb)
 
+            local new_tvb = tvb
             for i=1,array_len do
                 local item_tree
-                tvb, item_tree = dissect_field(tvb, tree, stash, field_type.items)
+                new_tvb, item_tree = dissect_field(new_tvb, tree, stash, field_type.items)
                 item_tree:prepend_text("["..(i - 1).."] ")
             end
+
+            tree:set_len(new_tvb:offset() - tvb:offset())
+
+            return new_tvb, tree
         else
-            tvb, tree = dissect_with_lenght(tvb, tree, proto_field, field_type.name, field_stash)
+            return dissect_with_lenght(tvb, tree, proto_field, field_type.name, field_stash)
         end
     else
-        tvb, tree = dissect_simple(tvb, tree, proto_field, field_type, field_len, field_stash)
+        return dissect_simple(tvb, tree, proto_field, field_type, field_len, field_stash)
     end
-
-    return tvb, tree
 end
 
 ---@param tvb TvbRange
 ---@param tree TreeItem
+---@param proto_field ProtoField
 ---@param fields_list any
----@return TvbRange
-function dissect_fields_list(tvb, tree, fields_list)
+---@return TvbRange,TreeItem
+function dissect_fields_list(tvb, tree, proto_field, fields_list)
     local stash = {}
 
+    tree = tree:add(proto_field, tvb)
+
+    local new_tvb = tvb
     for k, v in ipairs(fields_list.fields) do
-        tvb = dissect_field(tvb, tree, stash, v)
+        new_tvb = dissect_field(new_tvb, tree, stash, v)
         -- TODO: branch
     end
 
-    return tvb
+    tree:set_len(new_tvb:offset() - tvb:offset())
+
+    return new_tvb, tree
 end
 
 ---@param tvb TvbRange
 ---@param tree TreeItem
 ---@param packet_index number
----@return TvbRange
+---@return TvbRange,TreeItem
 local function dissect_packet(tvb, tree, packet_index)
     local packet = format.packets[packet_index]
 
@@ -329,8 +336,7 @@ local function dissect_packet(tvb, tree, packet_index)
         tvb = dissect_packet(tvb, tree, inherit)
     end
 
-    local packet_tree = tree:add(packet_fields[packet_index], tvb)
-    return dissect_fields_list(tvb, packet_tree, packet)
+    return dissect_fields_list(tvb, tree, packet_fields[packet_index], packet)
 end
 
 function proto.dissector(tvb, pinfo, tree)
