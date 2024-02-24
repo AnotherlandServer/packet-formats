@@ -63,7 +63,7 @@ local primitive_type_to_ftype = {
 }
 
 ---@param t any
----@return integer
+---@return integer,table?
 local function type_to_ftype(t)
     if type(t) == "number" then
         return ftypes.NONE
@@ -77,7 +77,7 @@ local function type_to_ftype(t)
                 return ftypes.NONE
             end
         else
-            return type_to_ftype(t.name)
+            return type_to_ftype(t.name), t.enum
         end
     end
 
@@ -87,7 +87,7 @@ end
 ---@type ProtoField[]
 local fields = {}
 for k, v in ipairs(format.fieldDefinitions) do
-    fields[k] = ProtoField.new(v.name, proto_name.."."..v.abbrev, type_to_ftype(v.type)) -- TODO: enums
+    fields[k] = ProtoField.new(v.name, proto_name.."."..v.abbrev, type_to_ftype(v.type))
 end
 
 ---@type ProtoField[]
