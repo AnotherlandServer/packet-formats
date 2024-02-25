@@ -454,7 +454,7 @@ function proto.dissector(tvb, pinfo, tree)
         tvb = dissect_packet(tvb:range(2), proto_tree, pinfo.cols["info"], by_id_sub)
 
         if tvb:len() > 0 then
-            tree:add_proto_expert_info(expert_not_end_of_packet)
+            proto_tree:add_proto_expert_info(expert_not_end_of_packet)
         end
     end)
 
