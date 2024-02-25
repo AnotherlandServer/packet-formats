@@ -14,6 +14,8 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+local Vtvb = require("vtvb")
+
 local proto_name = "otherland.packetformat"
 
 local format_ok, format = pcall(require, "packetformat_generated")
@@ -27,6 +29,7 @@ local expert_end_of_packet = ProtoExpert.new(
     proto_name..".exp.endofpacket", "The end of the packet was reached, but more data was expected.",
     expert.group.MALFORMED, expert.severity.ERROR
 )
+Vtvb.errors.end_of_packet = {expert = expert_end_of_packet}
 
 local expert_not_end_of_packet = ProtoExpert.new(
     proto_name.."exp.notendofpacket", "The packet was longer than expected, some data was not consumed.",
@@ -124,48 +127,6 @@ add_range(all_fields, packet_fields)
 add_range(all_fields, struct_fields)
 proto.fields = all_fields
 
----@class FakeEmptyRange: TvbRange
----@field offset_value number
-local FakeEmptyRange = {}
-FakeEmptyRange.__index = FakeEmptyRange
-
----@param offset number
----@return FakeEmptyRange
-function FakeEmptyRange:new(offset)
-    ---@type FakeEmptyRange
-    local instance = { offset_value = offset }
-    setmetatable(instance, self)
-    return instance
-end
-
----@return number
-function FakeEmptyRange:len()
-    return 0
-end
-
----@return number
-function FakeEmptyRange:offset()
-    return self.offset_value
-end
-
----@param tvb TvbRange
----@param offset number
----@return TvbRange
-local function tvb_safe_offset(tvb, offset)
-    if offset < tvb:len() then
-        return tvb:range(offset)
-    end
-    return FakeEmptyRange:new(tvb:offset() + tvb:len())
-end
-
----@param tvb Tvb|TvbRange
----@param len number
-local function check_len(tvb, len)
-    if tvb:len() < len then
-        error({expert = expert_end_of_packet})
-    end
-end
-
 local primitive_len = {
     bool = 1,
     u8 = 1,
@@ -204,33 +165,32 @@ local primitive_read = {
     i64 = function (tvb) return tvb:le_int64() end,
 }
 
----@param tvb TvbRange
+---@param tvb Vtvb
 ---@param tree TreeItem
 ---@param field ProtoField
 ---@param field_type string
 ---@param stash? table
----@return TvbRange, TreeItem
+---@return Vtvb,TreeItem
 local function dissect_with_lenght(tvb, tree, field, field_type, stash)
     local len = primitive_len[field_type]
 
-    check_len(tvb, len)
-    local range = tvb:range(0, len)
-    local new_tree = tree:add_le(field, range)
+    local range = tvb:slice(len)
+    local new_tree = range:tree_add_le(tree, field)
 
     if stash ~= nil then
-        stash[stash.put_here] = primitive_read[field_type](range)
+        stash[stash.put_here] = primitive_read[field_type](range:tvb())
     end
 
-    return tvb_safe_offset(tvb, len), new_tree
+    return tvb:range(len), new_tree
 end
 
----@param tvb TvbRange
+---@param tvb Vtvb
 ---@param tree TreeItem
 ---@param field ProtoField
 ---@param is_unicode boolean
 ---@param maxlen? number
 ---@param stash? table
----@return TvbRange, TreeItem
+---@return Vtvb,TreeItem
 local function dissect_string(tvb, tree, field, is_unicode, maxlen, stash)
     local enc
     if is_unicode then
@@ -239,8 +199,7 @@ local function dissect_string(tvb, tree, field, is_unicode, maxlen, stash)
         enc = ENC_ASCII
     end
 
-    check_len(tvb, 2)
-    local len = tvb:range(0, 2):le_uint()
+    local len = tvb:slice(2):tvb():le_uint()
 
     if is_unicode then
         len = len * 2
@@ -248,33 +207,32 @@ local function dissect_string(tvb, tree, field, is_unicode, maxlen, stash)
 
     local value = ""
     if len > 0 then
-        check_len(tvb, 2 + len)
-        value = tvb:range(2, len):string(enc)
+        value = tvb:range(2, len):tvb():string(enc)
     end
 
     if stash ~= nil then
         stash[stash.put_here] = value
     end
 
-    local string_tree = tree:add(field, tvb:range(0, 2 + len), value)
+    local string_tree = tvb:slice(2 + len):tree_add_le(tree, field, value)
 
     if maxlen ~= nil and len > maxlen then
         string_tree:add_proto_expert_info(expert_string_too_long)
     end
 
-    return tvb_safe_offset(tvb, 2 + len), string_tree
+    return tvb:range(2 + len), string_tree
 end
 
----@type fun(tvb: TvbRange, tree: TreeItem, proto_field: ProtoField|string, fields_list: any): TvbRange,TreeItem
+---@type fun(tvb: Vtvb, tree: TreeItem, proto_field: ProtoField|string, fields_list: any): Vtvb,TreeItem
 local dissect_fields_list
 
----@param tvb TvbRange
+---@param tvb Vtvb
 ---@param tree TreeItem
 ---@param proto_field ProtoField
 ---@param field_type any
 ---@param field_len? number
 ---@param stash? table
----@return TvbRange, TreeItem
+---@return Vtvb,TreeItem
 local function dissect_simple(tvb, tree, proto_field, field_type, field_len, stash)
     if type(field_type) == "string" then
         if field_type == "cstring" then
@@ -293,11 +251,11 @@ local function dissect_simple(tvb, tree, proto_field, field_type, field_len, sta
     return tvb, tree
 end
 
----@param tvb TvbRange
+---@param tvb Vtvb
 ---@param tree TreeItem
 ---@param stash table
 ---@param field_ref number|table
----@return TvbRange,TreeItem
+---@return Vtvb,TreeItem
 local function dissect_field(tvb, tree, stash, field_ref)
     local field_index, field_len
     if type(field_ref) == "number" then
@@ -329,11 +287,10 @@ local function dissect_field(tvb, tree, stash, field_ref)
             end
 
             if field_type.items == -1 then
-                check_len(tvb, array_len)
-                tree = tree:add(proto_field, tvb:range(0, array_len))
-                tvb = tvb_safe_offset(tvb, array_len)
+                tree = tvb:slice(array_len):tree_add_le(tree, proto_field)
+                tvb = tvb:range(array_len)
             else
-                tree = tree:add(proto_field, tvb)
+                tree = tvb:tree_add_le(tree, proto_field)
 
                 local new_tvb = tvb
                 for i=1,array_len do
@@ -342,7 +299,7 @@ local function dissect_field(tvb, tree, stash, field_ref)
                     item_tree:prepend_text("["..(i - 1).."] ")
                 end
 
-                tree:set_len(new_tvb:offset() - tvb:offset())
+                tree:set_len(tvb:length_to(new_tvb))
                 tvb = new_tvb
             end
 
@@ -355,11 +312,11 @@ local function dissect_field(tvb, tree, stash, field_ref)
     end
 end
 
----@param tvb TvbRange
+---@param tvb Vtvb
 ---@param tree TreeItem
 ---@param stash table
 ---@param branch table
----@return TvbRange
+---@return Vtvb
 local function dissect_branch(tvb, tree, stash, branch)
     local field_value = stash[branch.field]
 
@@ -389,15 +346,15 @@ local function dissect_branch(tvb, tree, stash, branch)
     return tvb
 end
 
----@param tvb TvbRange
+---@param tvb Vtvb
 ---@param tree TreeItem
 ---@param proto_field ProtoField|string
 ---@param fields_list any
----@return TvbRange,TreeItem
+---@return Vtvb,TreeItem
 function dissect_fields_list(tvb, tree, proto_field, fields_list)
     local stash = {}
 
-    tree = tree:add(proto_field, tvb)
+    tree = tvb:tree_add_le(tree, proto_field)
 
     local new_tvb = tvb
     for k, v in ipairs(fields_list.fields) do
@@ -408,16 +365,16 @@ function dissect_fields_list(tvb, tree, proto_field, fields_list)
         end
     end
 
-    tree:set_len(new_tvb:offset() - tvb:offset())
+    tree:set_len(tvb:length_to(new_tvb))
 
     return new_tvb, tree
 end
 
----@param tvb TvbRange
+---@param tvb Vtvb
 ---@param tree TreeItem
 ---@param info Column
 ---@param packet_index number
----@return TvbRange,TreeItem
+---@return Vtvb,TreeItem
 local function dissect_packet(tvb, tree, info, packet_index)
     local packet = format.packets[packet_index]
 
@@ -435,11 +392,11 @@ function proto.dissector(tvb, pinfo, tree)
     pinfo.cols["protocol"]:set("Packet Format")
     pinfo.cols["info"]:clear()
 
+    local vtvb = Vtvb.new(tvb)
     local proto_tree = tree:add(proto, tvb:range())
 
     local success, message = pcall(function ()
-        check_len(tvb, 2)
-        local ids = tvb:bytes(0, 2)
+        local ids = vtvb:slice(2):tvb():bytes()
 
         local by_id_main = format.byId[ids:get_index(0)]
         if by_id_main == nil then
@@ -451,9 +408,9 @@ function proto.dissector(tvb, pinfo, tree)
             error({expert = expert_bad_id})
         end
 
-        tvb = dissect_packet(tvb:range(2), proto_tree, pinfo.cols["info"], by_id_sub)
+        vtvb = dissect_packet(vtvb:range(2), proto_tree, pinfo.cols["info"], by_id_sub)
 
-        if tvb:len() > 0 then
+        if vtvb:len() > 0 then
             proto_tree:add_proto_expert_info(expert_not_end_of_packet)
         end
     end)
