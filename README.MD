@@ -19,6 +19,7 @@ The packet definitions make use of same basic data types not directly defined by
 - **wstring**: Wide string of two byte, little endian UTF-16 characters, prefixed by its length in characters encoded as a two byte little endian integer, has no terminating null character.
 - **nativeparam**: An Otherland specific structured data type. (See: [Nativeparam format](doc/nativeparam.md))
 - **uuid**: A standard 128 bit, COM/OLE style, little endian Universally Unique Identifier.
+- **packet**: Another embedded packet, starting with its two byte identifier.
 
 The documents may also contain custom user defined data types and arrays of intrinsics or user defined types. These should be represented by appropriate data structures in the target language.
 
