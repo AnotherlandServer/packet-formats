@@ -22,6 +22,7 @@ local format_ok, format = pcall(require, "packetformat_generated")
 if not format_ok then
     error("Generated definitions are not available, plase create them with the PacketDocs tool first.")
 end
+format = format.main;
 
 local proto = Proto.new(proto_name, "Otherland Packet Format")
 
@@ -68,7 +69,8 @@ local primitive_type_to_ftype = {
     f32 = ftypes.FLOAT,
     f64 = ftypes.DOUBLE,
     uuid = ftypes.GUID,
-    nativeparam = ftypes.NONE -- TODO
+    nativeparam = ftypes.NONE, -- TODO
+    packet = ftypes.NONE
 }
 
 ---@param t any
@@ -396,19 +398,17 @@ function proto.dissector(tvb, pinfo, tree)
     local proto_tree = tree:add(proto, tvb:range())
 
     local success, message = pcall(function ()
-        local ids = vtvb:slice(2):tvb():bytes()
+        local ids = vtvb:slice(format.idLength):tvb():bytes()
 
-        local by_id_main = format.byId[ids:get_index(0)]
-        if by_id_main == nil then
-            error({expert = expert_bad_id})
+        local by_id = format.byId;
+        for i=1,format.idLength do
+            by_id = by_id[ids:get_index(i - 1)]
+            if by_id == nil then
+                error({expert = expert_bad_id})
+            end
         end
 
-        local by_id_sub = by_id_main[ids:get_index(1)]
-        if by_id_sub == nil then
-            error({expert = expert_bad_id})
-        end
-
-        vtvb = dissect_packet(vtvb:range(2), proto_tree, pinfo.cols["info"], by_id_sub)
+        vtvb = dissect_packet(vtvb:range(2), proto_tree, pinfo.cols["info"], by_id)
 
         if vtvb:len() > 0 then
             proto_tree:add_proto_expert_info(expert_not_end_of_packet)
