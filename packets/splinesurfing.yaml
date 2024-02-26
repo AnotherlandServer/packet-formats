@@ -16,3 +16,12 @@ packets:
         type: bool
       - name: loc
         type: :NetworkVec3
+  oaPkt_SplineSurfing_Exit:
+    id: 0x99
+    subId: 0x02
+    inherit: CPkt
+    fields:
+      - name: avatarId
+        type: u64
+      - name: splineId
+        type: uuid
