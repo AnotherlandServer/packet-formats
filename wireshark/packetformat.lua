@@ -390,6 +390,24 @@ local function dissect_packet(tvb, tree, info, packet_index)
     return dissect_fields_list(tvb, tree, packet_fields[packet_index], packet)
 end
 
+---@param tvb Vtvb
+---@param tree TreeItem
+---@param info Column
+---@return Vtvb,TreeItem
+local function dissect_discriminated(tvb, tree, info)
+    local ids = tvb:slice(format.idLength):tvb():bytes()
+
+    local by_id = format.byId;
+    for i=1,format.idLength do
+        by_id = by_id[ids:get_index(i - 1)]
+        if by_id == nil then
+            error({expert = expert_bad_id})
+        end
+    end
+
+    return dissect_packet(tvb:range(format.idLength), tree, info, by_id)
+end
+
 function proto.dissector(tvb, pinfo, tree)
     pinfo.cols["protocol"]:set("Packet Format")
     pinfo.cols["info"]:clear()
@@ -398,17 +416,7 @@ function proto.dissector(tvb, pinfo, tree)
     local proto_tree = tree:add(proto, tvb:range())
 
     local success, message = pcall(function ()
-        local ids = vtvb:slice(format.idLength):tvb():bytes()
-
-        local by_id = format.byId;
-        for i=1,format.idLength do
-            by_id = by_id[ids:get_index(i - 1)]
-            if by_id == nil then
-                error({expert = expert_bad_id})
-            end
-        end
-
-        vtvb = dissect_packet(vtvb:range(2), proto_tree, pinfo.cols["info"], by_id)
+        vtvb = dissect_discriminated(vtvb, proto_tree, pinfo.cols["info"])
 
         if vtvb:len() > 0 then
             proto_tree:add_proto_expert_info(expert_not_end_of_packet)
