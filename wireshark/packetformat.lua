@@ -1,4 +1,4 @@
--- packetformat.lua - A dissectors for packet format definitions.
+-- packetformat.lua - A dissectors class for packet format definitions.
 -- Copyright (C) 2024 Vince Kálmán
 -- 
 -- This program is free software: you can redistribute it and/or modify
@@ -14,44 +14,20 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-local Vtvb = require("vtvb")
+---@class PacketFormat
+---@field private format any
+---@field private fields ProtoField[]
+---@field private packet_fields ProtoField[]
+---@field private struct_fields ProtoField[]
+local PacketFormat = {}
+PacketFormat.__index = PacketFormat
+PacketFormat.errors = {
+    bad_id = "Unknown packet id."
+}
 
-local proto_name = "otherland.packetformat"
-
-local format_ok, format = pcall(require, "packetformat_generated")
-if not format_ok then
-    error("Generated definitions are not available, plase create them with the PacketDocs tool first.")
-end
-format = format.main;
-
-local proto = Proto.new(proto_name, "Otherland Packet Format")
-
-local expert_end_of_packet = ProtoExpert.new(
-    proto_name..".exp.endofpacket", "The end of the packet was reached, but more data was expected.",
-    expert.group.MALFORMED, expert.severity.ERROR
-)
-Vtvb.errors.end_of_packet = {expert = expert_end_of_packet}
-
-local expert_not_end_of_packet = ProtoExpert.new(
-    proto_name.."exp.notendofpacket", "The packet was longer than expected, some data was not consumed.",
-    expert.group.UNDECODED, expert.severity.WARN
-)
-
-local expert_bad_id = ProtoExpert.new(
-    proto_name..".exp.badid", "Unknown packet id.",
-    expert.group.MALFORMED, expert.severity.ERROR
-)
-
-local expert_string_too_long = ProtoExpert.new(
-    proto_name..".exp.stringtoolong", "The lenght of this string is longer than the expected maximum.",
-    expert.group.PROTOCOL, expert.severity.WARN
-)
-
-proto.experts = {
-    expert_end_of_packet,
-    expert_not_end_of_packet,
-    expert_bad_id,
-    expert_string_too_long
+---@type { [string]: ProtoExpert? }
+PacketFormat.experts = {
+    string_too_long = nil
 }
 
 local primitive_type_to_ftype = {
@@ -69,8 +45,6 @@ local primitive_type_to_ftype = {
     f32 = ftypes.FLOAT,
     f64 = ftypes.DOUBLE,
     uuid = ftypes.GUID,
-    nativeparam = ftypes.NONE, -- TODO
-    packet = ftypes.NONE
 }
 
 ---@param t any
@@ -79,7 +53,11 @@ local function type_to_ftype(t)
     if type(t) == "number" then
         return ftypes.NONE
     elseif type(t) == "string" then
-        return primitive_type_to_ftype[t]
+        local pt = primitive_type_to_ftype[t]
+        if pt == nil then
+            return ftypes.NONE
+        end
+        return pt
     elseif type(t) == "table" then
         if t.name == "array" then
             if t.items == -1 then
@@ -95,22 +73,34 @@ local function type_to_ftype(t)
     return ftypes.NONE
 end
 
----@type ProtoField[]
-local fields = {}
-for k, v in ipairs(format.fieldDefinitions) do
-    fields[k] = ProtoField.new(v.name, proto_name.."."..v.abbrev, type_to_ftype(v.type))
-end
+---@param format any
+---@param proto_name string
+---@return PacketFormat
+function PacketFormat.new(format, proto_name)
+    ---@type ProtoField[]
+    local fields = {}
+    for k, v in ipairs(format.fieldDefinitions) do
+        fields[k] = ProtoField.new(v.name, proto_name.."."..v.abbrev, type_to_ftype(v.type))
+    end
 
----@type ProtoField[]
-local packet_fields = {}
-for k, v in ipairs(format.packets) do
-    packet_fields[k] = ProtoField.new(v.name, proto_name..".packet."..v.name, ftypes.NONE)
-end
+    ---@type ProtoField[]
+    local packet_fields = {}
+    for k, v in ipairs(format.packets) do
+        packet_fields[k] = ProtoField.new(v.name, proto_name..".packet."..v.name, ftypes.NONE)
+    end
 
----@type ProtoField[]
-local struct_fields = {}
-for k, v in ipairs(format.structures) do
-    struct_fields[k] = ProtoField.new(v.name, proto_name..".struct."..v.name, ftypes.NONE)
+    ---@type ProtoField[]
+    local struct_fields = {}
+    for k, v in ipairs(format.structures) do
+        struct_fields[k] = ProtoField.new(v.name, proto_name..".struct."..v.name, ftypes.NONE)
+    end
+
+    return setmetatable({
+        format = format,
+        fields = fields,
+        packet_fields = packet_fields,
+        struct_fields = struct_fields
+    }, PacketFormat)
 end
 
 ---@param to table
@@ -122,12 +112,12 @@ local function add_range(to, what)
     end
 end
 
----@type ProtoField[]
-local all_fields = {}
-add_range(all_fields, fields)
-add_range(all_fields, packet_fields)
-add_range(all_fields, struct_fields)
-proto.fields = all_fields
+---@param all_fields ProtoField[]
+function PacketFormat:add_all_fields(all_fields)
+    add_range(all_fields, self.fields)
+    add_range(all_fields, self.packet_fields)
+    add_range(all_fields, self.struct_fields)
+end
 
 local primitive_len = {
     bool = 1,
@@ -219,14 +209,13 @@ local function dissect_string(tvb, tree, field, is_unicode, maxlen, stash)
     local string_tree = tvb:slice(2 + len):tree_add_le(tree, field, value)
 
     if maxlen ~= nil and len > maxlen then
-        string_tree:add_proto_expert_info(expert_string_too_long)
+        if PacketFormat.experts.string_too_long ~= nil then
+            string_tree:add_proto_expert_info(PacketFormat.experts.string_too_long)
+        end
     end
 
     return tvb:range(2 + len), string_tree
 end
-
----@type fun(tvb: Vtvb, tree: TreeItem, proto_field: ProtoField|string, fields_list: any): Vtvb,TreeItem
-local dissect_fields_list
 
 ---@param tvb Vtvb
 ---@param tree TreeItem
@@ -235,7 +224,8 @@ local dissect_fields_list
 ---@param field_len? number
 ---@param stash? table
 ---@return Vtvb,TreeItem
-local function dissect_simple(tvb, tree, proto_field, field_type, field_len, stash)
+---@private
+function PacketFormat:dissect_simple(tvb, tree, proto_field, field_type, field_len, stash)
     if type(field_type) == "string" then
         if field_type == "cstring" then
             return dissect_string(tvb, tree, proto_field, false, field_len, stash)
@@ -247,7 +237,7 @@ local function dissect_simple(tvb, tree, proto_field, field_type, field_len, sta
             return dissect_with_lenght(tvb, tree, proto_field, field_type, stash)
         end
     elseif type(field_type) == "number" then
-        return dissect_fields_list(tvb, tree, struct_fields[field_type], format.structures[field_type])
+        return self:dissect_fields_list(tvb, tree, self.struct_fields[field_type], self.format.structures[field_type])
     end
 
     return tvb, tree
@@ -258,7 +248,8 @@ end
 ---@param stash table
 ---@param field_ref number|table
 ---@return Vtvb,TreeItem
-local function dissect_field(tvb, tree, stash, field_ref)
+---@private
+function PacketFormat:dissect_field(tvb, tree, stash, field_ref)
     local field_index, field_len
     if type(field_ref) == "number" then
         field_index = field_ref
@@ -268,9 +259,9 @@ local function dissect_field(tvb, tree, stash, field_ref)
         field_len = field_ref.len
     end
 
-    local field_def = format.fieldDefinitions[field_index]
+    local field_def = self.format.fieldDefinitions[field_index]
     local field_type = field_def.type
-    local proto_field = fields[field_index]
+    local proto_field = self.fields[field_index]
 
     local field_stash = nil
     if field_def.stash ~= nil then
@@ -297,7 +288,7 @@ local function dissect_field(tvb, tree, stash, field_ref)
                 local new_tvb = tvb
                 for i=1,array_len do
                     local item_tree
-                    new_tvb, item_tree = dissect_field(new_tvb, tree, stash, field_type.items)
+                    new_tvb, item_tree = self:dissect_field(new_tvb, tree, stash, field_type.items)
                     item_tree:prepend_text("["..(i - 1).."] ")
                 end
 
@@ -310,7 +301,7 @@ local function dissect_field(tvb, tree, stash, field_ref)
             return dissect_with_lenght(tvb, tree, proto_field, field_type.name, field_stash)
         end
     else
-        return dissect_simple(tvb, tree, proto_field, field_type, field_len, field_stash)
+        return self:dissect_simple(tvb, tree, proto_field, field_type, field_len, field_stash)
     end
 end
 
@@ -319,7 +310,8 @@ end
 ---@param stash table
 ---@param branch table
 ---@return Vtvb
-local function dissect_branch(tvb, tree, stash, branch)
+---@private
+function PacketFormat:dissect_branch(tvb, tree, stash, branch)
     local field_value = stash[branch.field]
 
     local condition
@@ -334,11 +326,11 @@ local function dissect_branch(tvb, tree, stash, branch)
 
     if condition then
         if branch.isTrue ~= nil then
-            tvb, tree = dissect_fields_list(tvb, tree, "True", branch.isTrue)
+            tvb, tree = self:dissect_fields_list(tvb, tree, "True", branch.isTrue)
         end
     else
         if branch.isFalse ~= nil then
-            tvb, tree = dissect_fields_list(tvb, tree, "False", branch.isFalse)
+            tvb, tree = self:dissect_fields_list(tvb, tree, "False", branch.isFalse)
         end
     end
 
@@ -353,7 +345,8 @@ end
 ---@param proto_field ProtoField|string
 ---@param fields_list any
 ---@return Vtvb,TreeItem
-function dissect_fields_list(tvb, tree, proto_field, fields_list)
+---@private
+function PacketFormat:dissect_fields_list(tvb, tree, proto_field, fields_list)
     local stash = {}
 
     tree = tvb:tree_add_le(tree, proto_field)
@@ -361,9 +354,9 @@ function dissect_fields_list(tvb, tree, proto_field, fields_list)
     local new_tvb = tvb
     for k, v in ipairs(fields_list.fields) do
         if type(v) == "table" and v.branch ~= nil then
-            new_tvb = dissect_branch(new_tvb, tree, stash, v.branch)
+            new_tvb = self:dissect_branch(new_tvb, tree, stash, v.branch)
         else
-            new_tvb = dissect_field(new_tvb, tree, stash, v)
+            new_tvb = self:dissect_field(new_tvb, tree, stash, v)
         end
     end
 
@@ -377,58 +370,36 @@ end
 ---@param info Column
 ---@param packet_index number
 ---@return Vtvb,TreeItem
-local function dissect_packet(tvb, tree, info, packet_index)
-    local packet = format.packets[packet_index]
+---@private
+function PacketFormat:dissect_packet(tvb, tree, info, packet_index)
+    local packet = self.format.packets[packet_index]
 
     local inherit = packet.inherit
     if inherit ~= nil then
-        tvb = dissect_packet(tvb, tree, info, inherit)
+        tvb = self:dissect_packet(tvb, tree, info, inherit)
     end
 
     info:append(packet.name.." ")
 
-    return dissect_fields_list(tvb, tree, packet_fields[packet_index], packet)
+    return self:dissect_fields_list(tvb, tree, self.packet_fields[packet_index], packet)
 end
 
 ---@param tvb Vtvb
 ---@param tree TreeItem
 ---@param info Column
 ---@return Vtvb,TreeItem
-local function dissect_discriminated(tvb, tree, info)
-    local ids = tvb:slice(format.idLength):tvb():bytes()
+function PacketFormat:dissect_discriminated(tvb, tree, info)
+    local ids = tvb:slice(self.format.idLength):tvb():bytes()
 
-    local by_id = format.byId;
-    for i=1,format.idLength do
+    local by_id = self.format.byId;
+    for i=1,self.format.idLength do
         by_id = by_id[ids:get_index(i - 1)]
         if by_id == nil then
-            error({expert = expert_bad_id})
+            error(PacketFormat.errors.bad_id)
         end
     end
 
-    return dissect_packet(tvb:range(format.idLength), tree, info, by_id)
+    return self:dissect_packet(tvb:range(self.format.idLength), tree, info, by_id)
 end
 
-function proto.dissector(tvb, pinfo, tree)
-    pinfo.cols["protocol"]:set("Packet Format")
-    pinfo.cols["info"]:clear()
-
-    local vtvb = Vtvb.new(tvb)
-    local proto_tree = tree:add(proto, tvb:range())
-
-    local success, message = pcall(function ()
-        vtvb = dissect_discriminated(vtvb, proto_tree, pinfo.cols["info"])
-
-        if vtvb:len() > 0 then
-            proto_tree:add_proto_expert_info(expert_not_end_of_packet)
-        end
-    end)
-
-    if not success then
-        if type(message) == "table" and message.expert ~= nil then
-            proto_tree:add_proto_expert_info(message.expert)
-        else
-            error(message)
-        end
-    end
-end
-
+return PacketFormat
