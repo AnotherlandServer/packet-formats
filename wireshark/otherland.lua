@@ -241,7 +241,10 @@ function otherland_raknet.dissector(buffer, pinfo, tree)
         subtree:add(payload, payload_range)
         
         if packetformat_dissector ~= nil then
-            packetformat_dissector:call(payload_range:tvb(), pinfo, tree)
+            local message_id = payload_range:range(0, 1):bytes():get_index(0)
+            if message_id >= 100 then
+                packetformat_dissector:call(payload_range:tvb(), pinfo, tree)
+            end
         end
     end
 end
