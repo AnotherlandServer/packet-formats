@@ -14,15 +14,21 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+---@alias dissector_func fun(tvb: Vtvb, tree: TreeItem, info: Column): Vtvb,TreeItem
+
 ---@class PacketFormat
 ---@field private format any
 ---@field private fields ProtoField[]
 ---@field private packet_fields ProtoField[]
 ---@field private struct_fields ProtoField[]
+---@field private custom_dissectors { [string]: dissector_func }
 local PacketFormat = {}
 PacketFormat.__index = PacketFormat
 PacketFormat.errors = {
-    bad_id = "Unknown packet id."
+    bad_id = "Unknown packet id.",
+    unknown_primitive_type = "Encountered unknown primitive type.",
+    unknown_specific_type = "The requested packet or structure does not exist.",
+    cant_stash_type = "Tried to stash a type that cannot be stashed."
 }
 
 ---@type { [string]: ProtoExpert? }
@@ -99,7 +105,8 @@ function PacketFormat.new(format, proto_name)
         format = format,
         fields = fields,
         packet_fields = packet_fields,
-        struct_fields = struct_fields
+        struct_fields = struct_fields,
+        custom_dissectors = {}
     }, PacketFormat)
 end
 
@@ -117,6 +124,46 @@ function PacketFormat:add_all_fields(all_fields)
     add_range(all_fields, self.fields)
     add_range(all_fields, self.packet_fields)
     add_range(all_fields, self.struct_fields)
+end
+
+---@param name string
+---@param dissector dissector_func
+function PacketFormat:add_custom_dissector(name, dissector)
+    self.custom_dissectors[name] = dissector
+end
+
+---@param name string
+---@return ProtoField,any
+---@private
+function PacketFormat:get_fields_list(name)
+    for k,v in ipairs(self.format.packets) do
+        if v.name == name then
+            return self.packet_fields[k],v
+        end
+    end
+    for k,v in ipairs(self.format.structures) do
+        if v.name == name then
+            return self.struct_fields[k],v
+        end
+    end
+
+    error(PacketFormat.errors.unknown_specific_type)
+end
+
+---@param name string
+---@return dissector_func
+function PacketFormat:get_specific_dissector_func(name)
+    local proto_field, fields_list = self:get_fields_list(name)
+    return function (tvb, tree, info)
+        return self:dissect_fields_list(tvb, tree, info, proto_field, fields_list)
+    end
+end
+
+---@return dissector_func
+function PacketFormat:get_discriminated_dissector_func()
+    return function (tvb, tree, info)
+        return self:dissect_discriminated(tvb, tree, info)
+    end
 end
 
 local primitive_len = {
@@ -166,11 +213,19 @@ local primitive_read = {
 local function dissect_with_lenght(tvb, tree, field, field_type, stash)
     local len = primitive_len[field_type]
 
+    if len == nil then
+        error(PacketFormat.errors.unknown_primitive_type)
+    end
+
     local range = tvb:slice(len)
     local new_tree = range:tree_add_le(tree, field)
 
     if stash ~= nil then
-        stash[stash.put_here] = primitive_read[field_type](range:tvb())
+        local read_func = primitive_read[field_type]
+        if read_func == nil then
+            error(PacketFormat.errors.cant_stash_type)
+        end
+        stash[stash.put_here] = read_func(range:tvb())
     end
 
     return tvb:range(len), new_tree
@@ -219,25 +274,27 @@ end
 
 ---@param tvb Vtvb
 ---@param tree TreeItem
+---@param info Column
 ---@param proto_field ProtoField
 ---@param field_type any
 ---@param field_len? number
 ---@param stash? table
 ---@return Vtvb,TreeItem
 ---@private
-function PacketFormat:dissect_simple(tvb, tree, proto_field, field_type, field_len, stash)
+function PacketFormat:dissect_simple(tvb, tree, info, proto_field, field_type, field_len, stash)
     if type(field_type) == "string" then
-        if field_type == "cstring" then
+        local dissector_func = self.custom_dissectors[field_type]
+        if dissector_func ~= nil then
+            return dissector_func(tvb, tree, info)
+        elseif field_type == "cstring" then
             return dissect_string(tvb, tree, proto_field, false, field_len, stash)
         elseif field_type == "wstring" then
             return dissect_string(tvb, tree, proto_field, true, field_len, stash)
-        elseif field_type == "nativeparam" then
-            return tvb, tree -- TODO
         else
             return dissect_with_lenght(tvb, tree, proto_field, field_type, stash)
         end
     elseif type(field_type) == "number" then
-        return self:dissect_fields_list(tvb, tree, self.struct_fields[field_type], self.format.structures[field_type])
+        return self:dissect_fields_list(tvb, tree, info, self.struct_fields[field_type], self.format.structures[field_type])
     end
 
     return tvb, tree
@@ -245,11 +302,12 @@ end
 
 ---@param tvb Vtvb
 ---@param tree TreeItem
+---@param info Column
 ---@param stash table
 ---@param field_ref number|table
 ---@return Vtvb,TreeItem
 ---@private
-function PacketFormat:dissect_field(tvb, tree, stash, field_ref)
+function PacketFormat:dissect_field(tvb, tree, info, stash, field_ref)
     local field_index, field_len
     if type(field_ref) == "number" then
         field_index = field_ref
@@ -288,7 +346,7 @@ function PacketFormat:dissect_field(tvb, tree, stash, field_ref)
                 local new_tvb = tvb
                 for i=1,array_len do
                     local item_tree
-                    new_tvb, item_tree = self:dissect_field(new_tvb, tree, stash, field_type.items)
+                    new_tvb, item_tree = self:dissect_field(new_tvb, tree, info, stash, field_type.items)
                     item_tree:prepend_text("["..(i - 1).."] ")
                 end
 
@@ -301,17 +359,18 @@ function PacketFormat:dissect_field(tvb, tree, stash, field_ref)
             return dissect_with_lenght(tvb, tree, proto_field, field_type.name, field_stash)
         end
     else
-        return self:dissect_simple(tvb, tree, proto_field, field_type, field_len, field_stash)
+        return self:dissect_simple(tvb, tree, info, proto_field, field_type, field_len, field_stash)
     end
 end
 
 ---@param tvb Vtvb
 ---@param tree TreeItem
+---@param info Column
 ---@param stash table
 ---@param branch table
 ---@return Vtvb
 ---@private
-function PacketFormat:dissect_branch(tvb, tree, stash, branch)
+function PacketFormat:dissect_branch(tvb, tree, info, stash, branch)
     local field_value = stash[branch.field]
 
     local condition
@@ -326,11 +385,11 @@ function PacketFormat:dissect_branch(tvb, tree, stash, branch)
 
     if condition then
         if branch.isTrue ~= nil then
-            tvb, tree = self:dissect_fields_list(tvb, tree, "True", branch.isTrue)
+            tvb, tree = self:dissect_fields_list(tvb, tree, info, "True", branch.isTrue)
         end
     else
         if branch.isFalse ~= nil then
-            tvb, tree = self:dissect_fields_list(tvb, tree, "False", branch.isFalse)
+            tvb, tree = self:dissect_fields_list(tvb, tree, info, "False", branch.isFalse)
         end
     end
 
@@ -342,11 +401,12 @@ end
 
 ---@param tvb Vtvb
 ---@param tree TreeItem
+---@param info Column
 ---@param proto_field ProtoField|string
 ---@param fields_list any
 ---@return Vtvb,TreeItem
 ---@private
-function PacketFormat:dissect_fields_list(tvb, tree, proto_field, fields_list)
+function PacketFormat:dissect_fields_list(tvb, tree, info, proto_field, fields_list)
     local stash = {}
 
     tree = tvb:tree_add_le(tree, proto_field)
@@ -354,9 +414,9 @@ function PacketFormat:dissect_fields_list(tvb, tree, proto_field, fields_list)
     local new_tvb = tvb
     for k, v in ipairs(fields_list.fields) do
         if type(v) == "table" and v.branch ~= nil then
-            new_tvb = self:dissect_branch(new_tvb, tree, stash, v.branch)
+            new_tvb = self:dissect_branch(new_tvb, tree, info, stash, v.branch)
         else
-            new_tvb = self:dissect_field(new_tvb, tree, stash, v)
+            new_tvb = self:dissect_field(new_tvb, tree, info, stash, v)
         end
     end
 
@@ -381,7 +441,7 @@ function PacketFormat:dissect_packet(tvb, tree, info, packet_index)
 
     info:append(packet.name.." ")
 
-    return self:dissect_fields_list(tvb, tree, self.packet_fields[packet_index], packet)
+    return self:dissect_fields_list(tvb, tree, info, self.packet_fields[packet_index], packet)
 end
 
 ---@param tvb Vtvb
