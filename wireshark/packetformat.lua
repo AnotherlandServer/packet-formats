@@ -14,7 +14,7 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
----@alias dissector_func fun(tvb: Vtvb, tree: TreeItem, info: Column): Vtvb,TreeItem
+---@alias dissector_func fun(tvb: Vtvb, tree: TreeItem, info?: Column): Vtvb,TreeItem
 
 ---@class PacketFormat
 ---@field private format any
@@ -151,18 +151,33 @@ function PacketFormat:get_fields_list(name)
 end
 
 ---@param name string
+---@param propagate_info boolean
 ---@return dissector_func
-function PacketFormat:get_specific_dissector_func(name)
+function PacketFormat:get_specific_dissector_func(name, propagate_info)
     local proto_field, fields_list = self:get_fields_list(name)
-    return function (tvb, tree, info)
-        return self:dissect_fields_list(tvb, tree, info, proto_field, fields_list)
+
+    if propagate_info then
+        return function (tvb, tree, info)
+            return self:dissect_fields_list(tvb, tree, info, proto_field, fields_list)
+        end
+    else
+        return function (tvb, tree)
+            return self:dissect_fields_list(tvb, tree, nil, proto_field, fields_list)
+        end
     end
 end
 
+---@param propagate_info boolean
 ---@return dissector_func
-function PacketFormat:get_discriminated_dissector_func()
-    return function (tvb, tree, info)
-        return self:dissect_discriminated(tvb, tree, info)
+function PacketFormat:get_discriminated_dissector_func(propagate_info)
+    if propagate_info then
+        return function (tvb, tree, info)
+            return self:dissect_discriminated(tvb, tree, info)
+        end
+    else
+        return function (tvb, tree)
+            return self:dissect_discriminated(tvb, tree)
+        end
     end
 end
 
@@ -274,7 +289,7 @@ end
 
 ---@param tvb Vtvb
 ---@param tree TreeItem
----@param info Column
+---@param info? Column
 ---@param proto_field ProtoField
 ---@param field_type any
 ---@param field_len? number
@@ -302,7 +317,7 @@ end
 
 ---@param tvb Vtvb
 ---@param tree TreeItem
----@param info Column
+---@param info? Column
 ---@param stash table
 ---@param field_ref number|table
 ---@return Vtvb,TreeItem
@@ -365,7 +380,7 @@ end
 
 ---@param tvb Vtvb
 ---@param tree TreeItem
----@param info Column
+---@param info? Column
 ---@param stash table
 ---@param branch table
 ---@return Vtvb
@@ -401,7 +416,7 @@ end
 
 ---@param tvb Vtvb
 ---@param tree TreeItem
----@param info Column
+---@param info? Column
 ---@param proto_field ProtoField|string
 ---@param fields_list any
 ---@return Vtvb,TreeItem
@@ -427,7 +442,7 @@ end
 
 ---@param tvb Vtvb
 ---@param tree TreeItem
----@param info Column
+---@param info? Column
 ---@param packet_index number
 ---@return Vtvb,TreeItem
 ---@private
@@ -439,14 +454,16 @@ function PacketFormat:dissect_packet(tvb, tree, info, packet_index)
         tvb = self:dissect_packet(tvb, tree, info, inherit)
     end
 
-    info:append(packet.name.." ")
+    if info ~= nil then
+        info:append(packet.name.." ")
+    end
 
     return self:dissect_fields_list(tvb, tree, info, self.packet_fields[packet_index], packet)
 end
 
 ---@param tvb Vtvb
 ---@param tree TreeItem
----@param info Column
+---@param info? Column
 ---@return Vtvb,TreeItem
 function PacketFormat:dissect_discriminated(tvb, tree, info)
     local ids = tvb:slice(self.format.idLength):tvb():bytes()

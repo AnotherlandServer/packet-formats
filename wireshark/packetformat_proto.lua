@@ -61,9 +61,9 @@ proto.experts = {
 local packetformat_main = PacketFormat.new(format.main, proto_name)
 local packetformat_nativeparam = PacketFormat.new(format.nativeparam, proto_name..".nativeparam")
 
-packetformat_main:add_custom_dissector("packet", packetformat_main:get_discriminated_dissector_func())
-packetformat_main:add_custom_dissector("nativeparam", packetformat_nativeparam:get_specific_dissector_func("struct"))
-packetformat_nativeparam:add_custom_dissector("nativeparam", packetformat_nativeparam:get_discriminated_dissector_func())
+packetformat_main:add_custom_dissector("packet", packetformat_main:get_discriminated_dissector_func(true))
+packetformat_main:add_custom_dissector("nativeparam", packetformat_nativeparam:get_specific_dissector_func("struct", false))
+packetformat_nativeparam:add_custom_dissector("nativeparam", packetformat_nativeparam:get_discriminated_dissector_func(true))
 
 ---@type ProtoField[]
 local all_fields = {}
