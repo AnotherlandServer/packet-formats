@@ -42,3 +42,47 @@ packets:
       - name: targetAvatarId
         type: u64
       - type: u16
+  oaPktPortalRequestAck:
+    id: 0x8c
+    subId: 0x37
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: u64
+      - type: u16
+      - type: u32
+        name: arrayLenA
+      - type: { name: array, len: arrayLenA, type: :PortalAckPartA}
+      - type: u32
+        name: arrayLenB
+      - type: { name: array, len: arrayLenB, type: :PortalAckPartB}
+      - type: u32
+        name: arrayLenC
+      - type: { name: array, len: arrayLenC, type: :PortalAckPartB}
+      - type: u32
+        name: arrayLenD
+      - type: { name: array, len: arrayLenD, type: :PortalAckPartB}
+      - type: nativeparam
+structures:
+  PortalAckPartA:
+    fields:
+      - type: cstring
+      - type: cstring
+      - type: cstring
+      - type: cstring
+      - type: cstring
+      - type: cstring
+      - type: u32
+      - type: u32
+      - type: u32
+      - type: u32
+  PortalAckPartB:
+    fields:
+      - type: cstring
+      - type: cstring
+      - type: cstring
+      - type: cstring
+      - type: cstring
+      - type: cstring
+      - type: u32
+      - type: u32
