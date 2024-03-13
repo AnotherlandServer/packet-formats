@@ -139,6 +139,28 @@ function otherland_raknet.init()
     packetformat_dissector = Dissector.get("otherland.packetformat")
 end
 
+local internal_packets = {
+    1, -- ID_INTERNAL_PING
+    4, -- ID_CONNECTED_PONG
+    5, -- ID_CONNECTION_REQUEST
+    6, -- ID_SECURED_CONNECTION_RESPONSE
+    7, -- ID_SECURED_CONNECTION_CONFIRMATION
+    9, -- ID_OPEN_CONNECTION_REQUEST
+    10, --ID_OPEN_CONNECTION_REPLY
+    11, --ID_CONNECTION_REQUEST_ACCEPTED
+    14, --ID_NEW_INCOMING_CONNECTION
+    16, --ID_DISCONNECTION_NOTIFICATION
+}
+
+local function contains(table, value)
+    for k,v in ipairs(table) do
+        if v == value then
+            return true
+        end
+    end
+    return false
+end
+
 function otherland_raknet.dissector(buffer, pinfo, tree)
     print("Dissect")
 
@@ -242,7 +264,7 @@ function otherland_raknet.dissector(buffer, pinfo, tree)
         
         if packetformat_dissector ~= nil then
             local message_id = payload_range:range(0, 1):bytes():get_index(0)
-            if message_id >= 100 then
+            if not contains(internal_packets, message_id) then
                 packetformat_dissector:call(payload_range:tvb(), pinfo, tree)
             end
         end
