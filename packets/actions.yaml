@@ -66,23 +66,36 @@ packets:
 structures:
   PortalAckPartA:
     fields:
-      - type: cstring
-      - type: cstring
-      - type: cstring
-      - type: cstring
-      - type: cstring
-      - type: cstring
+      - name: mapName
+        type: cstring 
+      - name: worldName
+        type: cstring
+      - name: displayName
+        type: cstring
+      - name: worldTexture
+        type: cstring
+      - name: portalTexture
+        type: cstring
+      - name: description
+        type: cstring
       - type: u32
       - type: u32
       - type: u32
-      - type: u32
+      - name: level
+        type: u32
   PortalAckPartB:
     fields:
-      - type: cstring
-      - type: cstring
-      - type: cstring
-      - type: cstring
-      - type: cstring
-      - type: cstring
+      - name: mapName
+        type: cstring 
+      - name: worldName
+        type: cstring
+      - name: displayName
+        type: cstring
+      - name: worldTexture
+        type: cstring
+      - name: portalTexture
+        type: cstring
+      - name: description
+        type: cstring
       - type: u32
       - type: u32
