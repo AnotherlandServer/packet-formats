@@ -94,7 +94,6 @@ function Vtvb:length_to(other)
     return other.my_offset - self.my_offset
 end
 
--- TODO: Disallow strings for proto_field here.
 ---@param tree TreeItem
 ---@param proto_field Proto|ProtoField 
 ---@param value? any
