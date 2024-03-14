@@ -96,7 +96,7 @@ end
 
 -- TODO: Disallow strings for proto_field here.
 ---@param tree TreeItem
----@param proto_field Proto|ProtoField|string 
+---@param proto_field Proto|ProtoField 
 ---@param value? any
 ---@return TreeItem
 function Vtvb:tree_add_le(tree, proto_field, value)

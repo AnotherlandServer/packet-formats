@@ -21,6 +21,8 @@
 ---@field private fields ProtoField[]
 ---@field private packet_fields ProtoField[]
 ---@field private struct_fields ProtoField[]
+---@field private branch_true_fields ProtoField[]
+---@field private branch_false_fields ProtoField[]
 ---@field private custom_dissectors { [string]: dissector_func }
 local PacketFormat = {}
 PacketFormat.__index = PacketFormat
@@ -101,11 +103,22 @@ function PacketFormat.new(format, proto_name)
         struct_fields[k] = ProtoField.new(v.name, proto_name..".struct."..v.name, ftypes.NONE)
     end
 
+    ---@type ProtoField[]
+    local branch_true_fields = {}
+    ---@type ProtoField[]
+    local branch_false_fields = {}
+    for k, v in ipairs(format.branches) do
+        branch_true_fields[k] = ProtoField.new(v.name, proto_name..".branch."..v.abbrev..".true", ftypes.NONE)
+        branch_false_fields[k] = ProtoField.new(v.name, proto_name..".branch."..v.abbrev..".false", ftypes.NONE)
+    end
+
     return setmetatable({
         format = format,
         fields = fields,
         packet_fields = packet_fields,
         struct_fields = struct_fields,
+        branch_true_fields = branch_true_fields,
+        branch_false_fields = branch_false_fields,
         custom_dissectors = {}
     }, PacketFormat)
 end
@@ -124,6 +137,8 @@ function PacketFormat:add_all_fields(all_fields)
     add_range(all_fields, self.fields)
     add_range(all_fields, self.packet_fields)
     add_range(all_fields, self.struct_fields)
+    add_range(all_fields, self.branch_true_fields)
+    add_range(all_fields, self.branch_false_fields)
 end
 
 ---@param name string
@@ -386,38 +401,39 @@ end
 ---@return Vtvb
 ---@private
 function PacketFormat:dissect_branch(tvb, tree, info, stash, branch)
-    local field_value = stash[branch.field]
+    local desc = self.format.branches[branch.index]
+    local field_value = stash[desc.field]
 
     local condition
-    if branch.test_equal ~= nil then
-        condition = (field_value == branch.test_equal)
-    elseif branch.test_flag ~= nil then
+    if desc.test_equal ~= nil then
+        condition = (field_value == desc.test_equal)
+    elseif desc.test_flag ~= nil then
         -- This won't work with 64 bit values, but the format definition literal also can't handle those right now.
-        condition = (bit32.band(field_value, branch.test_flag) == branch.test_flag)
+        condition = (bit32.band(field_value, desc.test_flag) == desc.test_flag)
     else
         condition = (field_value ~= 0)
     end
 
+    local tvb_new
     if condition then
         if branch.isTrue ~= nil then
-            tvb, tree = self:dissect_fields_list(tvb, tree, info, "True", branch.isTrue)
+            tvb_new, tree = self:dissect_fields_list(tvb, tree, info, self.branch_true_fields[branch.index], branch.isTrue)
         end
     else
         if branch.isFalse ~= nil then
-            tvb, tree = self:dissect_fields_list(tvb, tree, info, "False", branch.isFalse)
+            tvb_new, tree = self:dissect_fields_list(tvb, tree, info, self.branch_false_fields[branch.index], branch.isFalse)
         end
     end
 
-    tree:set_generated(true)
-    tree:set_len(0)
+    tree:set_len(tvb:length_to(tvb_new))
 
-    return tvb
+    return tvb_new
 end
 
 ---@param tvb Vtvb
 ---@param tree TreeItem
 ---@param info? Column
----@param proto_field ProtoField|string
+---@param proto_field ProtoField
 ---@param fields_list any
 ---@return Vtvb,TreeItem
 ---@private
