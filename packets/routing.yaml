@@ -48,7 +48,7 @@ packets:
       - type: u8
       - type: u8
       - type: u64
-      - type: { name: array, len: _remainder, type: u8 }
+      - type: packet
   oaPktCheatingClusterNode:
     id: 0x8c
     subId: 0x35

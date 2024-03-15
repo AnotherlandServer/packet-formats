@@ -14,7 +14,7 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-local otherland_raknet = Proto("Otherland", "Otherland Raknet")
+local otherland_raknet = Proto("otherland.raknet", "Otherland Raknet")
 local remote_time_field = ProtoField.uint32("otherland.raknet.remote_ime", "Remote Time", base.DEC)
 local ack_packet_field = ProtoField.uint32("otherland.raknet.ack", "Ack", base.DEC)
 local packet_no_field = ProtoField.uint32("otherland.raknet.messageNo", "Message No.", base.DEC)
@@ -133,6 +133,34 @@ local function read_uint16(byte_array)
     return (byte_array:get_index(1) * 256) + byte_array:get_index(0)
 end
 
+local packetformat_dissector
+
+function otherland_raknet.init()
+    packetformat_dissector = Dissector.get("otherland.packetformat")
+end
+
+local internal_packets = {
+    1, -- ID_INTERNAL_PING
+    4, -- ID_CONNECTED_PONG
+    5, -- ID_CONNECTION_REQUEST
+    6, -- ID_SECURED_CONNECTION_RESPONSE
+    7, -- ID_SECURED_CONNECTION_CONFIRMATION
+    9, -- ID_OPEN_CONNECTION_REQUEST
+    10, --ID_OPEN_CONNECTION_REPLY
+    11, --ID_CONNECTION_REQUEST_ACCEPTED
+    14, --ID_NEW_INCOMING_CONNECTION
+    16, --ID_DISCONNECTION_NOTIFICATION
+}
+
+local function contains(table, value)
+    for k,v in ipairs(table) do
+        if v == value then
+            return true
+        end
+    end
+    return false
+end
+
 function otherland_raknet.dissector(buffer, pinfo, tree)
     print("Dissect")
 
@@ -230,7 +258,16 @@ function otherland_raknet.dissector(buffer, pinfo, tree)
 
         -- byte align offset
         local message_offset = math.ceil(offset / 8)
-        subtree:add(payload, buffer(message_offset, math.ceil(read_uint16(message_length) / 8)))
+
+        local payload_range = buffer(message_offset, math.ceil(read_uint16(message_length) / 8))
+        subtree:add(payload, payload_range)
+        
+        if packetformat_dissector ~= nil then
+            local message_id = payload_range:range(0, 1):bytes():get_index(0)
+            if not contains(internal_packets, message_id) then
+                packetformat_dissector:call(payload_range:tvb(), pinfo, tree)
+            end
+        end
     end
 end
 
