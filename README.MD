@@ -6,6 +6,7 @@ This repository documents the packet structure of the game "Otherland" in YAML f
 - **otherland.packet.schema.yaml**: Defines the structure of the packet definition documents in JSON Schema format.
 - **packets**: This folder contains the primary packet definition documents.
 - **structs**: Contains miscellaneous user defined structures used by the packet definitions.
+- **wireshark**: Dissectors for the Otherland RakNet transport protocol and application layer packets.
 
 ## Intrinsic Data Types
 
@@ -22,6 +23,20 @@ The packet definitions make use of same basic data types not directly defined by
 - **packet**: Another embedded packet, starting with its two byte identifier.
 
 The documents may also contain custom user defined data types and arrays of intrinsics or user defined types. These should be represented by appropriate data structures in the target language.
+
+## Wireshark Dissectors
+
+`otherland.lua` defines a dissector for the game's modified RakNet transport layer protocol. `packetformat_proto.lua` defines a dissector for the application layer packets described in the packet definition documents.
+
+To use the application layer dissector, you first need to process the packet definition documents with the [TreeHouse.PacketDocs](https://github.com/DRKV333/TreeHouse) tool.
+
+```
+TreeHouse.PacketDocs.exe lua -d . -o ./wireshark/packetformat_generated.lua
+```
+
+## Licensing
+
+The contents of this repository are provided under the CC0 license, except for the `wireshark` folder. These code files make use of Wireshark's API, so they are available under the GNU GPL.
 
 ## Contribute
 Please feel free to contribute by submitting PRs or raising issues. Ensure your additions or changes follow the established schema format.

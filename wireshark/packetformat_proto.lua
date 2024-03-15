@@ -21,7 +21,7 @@ local proto_name = "otherland.packetformat"
 
 local format_ok, format = pcall(require, "packetformat_generated")
 if not format_ok then
-    error("Generated definitions are not available, plase create them with the PacketDocs tool first.")
+    error("Generated definitions are not available, plase create them with the TreeHouse.PacketDocs tool first.")
 end
 
 local proto = Proto.new(proto_name, "Otherland Packet Format")
