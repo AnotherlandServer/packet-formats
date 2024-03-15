@@ -380,6 +380,7 @@ function PacketFormat:dissect_field(tvb, tree, info, stash, field_ref)
                     item_tree:prepend_text("["..(i - 1).."] ")
                 end
 
+                tree:append_text(" -> ["..array_len.."]")
                 tree:set_len(tvb:length_to(new_tvb))
                 tvb = new_tvb
             end
@@ -425,6 +426,7 @@ function PacketFormat:dissect_branch(tvb, tree, info, stash, branch)
         end
     end
 
+    tree:append_text(" -> ["..tostring(condition).."]")
     tree:set_len(tvb:length_to(tvb_new))
 
     return tvb_new
