@@ -56,7 +56,7 @@ packets:
             fields:
             - name: field_0x4
               type: bool
-            - name: field29_0x24
+            - name: realmId
               type: u32
             - name: realmIp
               type: u32

@@ -42,7 +42,8 @@ packets:
     subId: 0x08
     inherit: CPkt
     fields:
-      - type: u32
+      - name: characterId
+        type: u32
       - type: u32
   oaPktCharacterSelectSuccess:
     id: 0x7e
@@ -51,9 +52,9 @@ packets:
     fields:
       - type: u32
       - type: u32
-      - name: worldIp
+      - name: clusterIp
         type: u32
-      - name: worldPort
+      - name: clusterPort
         type: u16
       - name: sessionId
         type: uuid
@@ -114,8 +115,8 @@ structures:
         type: u32
       - name: name
         type: cstring
-      - name: worldId
+      - name: worldId # id as in instance.db:WorldDef
         type: u32
-      - name: params
+      - name: params # params of class player
         type: :Buffer
       - type: u32
