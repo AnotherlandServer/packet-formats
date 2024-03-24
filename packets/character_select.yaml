@@ -5,6 +5,12 @@ packets:
     id: 0x7e
     subId: 0x02
     inherit: CPkt
+    description: >
+      Sent by the client to request the creation
+      of a character with a name as input by the user.
+    relatesTo:
+      - oaPktCharacterFailure
+      - CPktStream_126_5
     fields:
       - name: characterName
         type: cstring
@@ -12,6 +18,12 @@ packets:
     id: 0x7e
     subId: 0x06
     inherit: CPkt
+    description: >
+      Sent by the client to request the deletion 
+      of the character identified by `characterId`.
+    relatesTo:
+      - oaPktCharacterDeleteSuccess
+      - oaPktCharacterFailure
     fields:
       - name: characterId
         type: u32
@@ -19,6 +31,11 @@ packets:
     id: 0x7e
     subId: 0x07
     inherit: CPkt
+    description: >
+      Informs the client about the successful deletion
+      of the character identified by `characterId`.
+    relatesTo:
+      - oaPktCharacterDelete
     fields:
       - name: characterId
         type: u32
@@ -26,6 +43,16 @@ packets:
     id: 0x7e
     subId: 0x0a
     inherit: CPkt
+    description: >
+      Informs the client about several errors that
+      could happen as a result of actions in the 
+      character selection screen.
+      A message based on the code given by
+      `errorCode` is presented to the user.
+    relatesTo:
+      - oaPktCharacterDelete
+      - oaPktCharacterCreate
+      - oaPktCharacterSelect
     fields:
       - name: errorCode
         type: 
@@ -41,6 +68,12 @@ packets:
     id: 0x7e
     subId: 0x08
     inherit: CPkt
+    description: >
+      Sent by the client after the user confirmed the character selection.
+      Intestingly, `oaPktRequestSelectWorld` is sent before this message.
+    relatesTo:
+      - oaPktCharacterFailure
+      - oaPktCharacterSelectSuccess
     fields:
       - name: characterId
         type: u32
@@ -49,6 +82,12 @@ packets:
     id: 0x7e
     subId: 0x09
     inherit: CPkt
+    description: >
+      Informs the client about a successfull character selection.
+      It will now disconnect and connect to the cluster server at `clusterIp` and `clusterPort`.
+      The client will remain connected to the cluster server until the end of the gaming session.
+    relatesTo:
+      - oaPktCharacterSelect
     fields:
       - type: u32
       - type: u32
@@ -62,6 +101,11 @@ packets:
     id: 0x7e
     subId: 0x00
     inherit: CPkt
+    description: >
+      Sent by the client to request the list of characters 
+      associated with the users account.
+    relatesTo:
+      - CPktStream_126_1
     fields:
       - type: uuid
         name: sessionId
@@ -71,15 +115,29 @@ packets:
     id: 0x7e
     subId: 0x0b
     inherit: CPkt
+    description: >
+      Sent by the client after confirming the character selection.
+      Sent before `oaPktCharacterSelect`, so the server is unable to 
+      know which character was selected when this packet arrives.
+    relatesTo:
+      - oaPktResponseSelectWorld
     fields:
       - type: u16
         name: worldId
+        description: >
+          Id used for referencing WorldDefs instance.db
       - type: u16
       - type: uuid
   oaPktResponseSelectWorld:
     id: 0x7e
     subId: 0x0c
     inherit: CPkt
+    description: >
+      Informs the client about successfull or unsuccessfull world selection,
+      as stated by `success`. The field `errorCode` can be used to display 
+      an error message to the user.
+    relatesTo:
+      - oaPktRequestSelectWorld
     fields:
       - type: bool
         name: success
@@ -96,6 +154,10 @@ packets:
     id: 0x7e
     subId: 0x01
     inherit: CPkt
+    description: >
+      A list of characters owned with the users account. 
+    relatesTo:
+      - oaPktRequestCharacterList
     fields:
       - name: count
         type: u32
@@ -105,18 +167,30 @@ packets:
     id: 0x7e
     subId: 0x05
     inherit: CPkt
+    description: >
+      A single player character sent as the result of 
+      successfull character creation.
+    relatesTo:
+      - oaPktCharacterCreate
     fields:
       - name: character
         type: :oaCharacter
 structures:
   oaCharacter:
+    description: >
+      A player character definition.
     fields:
       - name: id
         type: u32
       - name: name
         type: cstring
-      - name: worldId # id as in instance.db:WorldDef
+      - name: worldId
         type: u32
-      - name: params # params of class player
+        description: >
+          Id used for referencing WorldDefs instance.db
+      - name: params
         type: :Buffer
+        description: >
+          Object parameters of class `player`. 
+          See paramlist.ini for a description of it's attributes.
       - type: u32
