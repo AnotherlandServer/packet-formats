@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  CPktItemNotify:
+    id: 0x2f
+    subId: 0x00
+    inherit: CPkt
+    fields:
+      - type: uuid
+      - type: u64
+      - type: u16
+      - type: cstring
+      - type: i32
+      - type: f64
+  CPktItemUpdate:
+    id: 0x36
+    subId: 0x00
+    inherit: CPkt
+    description: >
+      Tells the client to add one item to the item list of 
+      the Avatar with Id `avatarId`. 
+      The item params need to specify the container (Param `containerID`)
+      and inventory slot index (Param `inventorySlotIndex`).
+      `containerID` is referencing a well known id for certain containers.
+      Possible values are:
+        - 0 - CT_INVENTORY
+        - 1 - unknown
+        - 2 - CT_STORAGE
+        - 3 = unknown
+        - 5 = unknown (possibly Bank account)
+    relatesTo:
+      - CPktItemUpdate_37
+    fields:
+      - name: id
+        type: uuid
+        description: >
+          Unique ID for this specific instance of the item.
+          This is used to reference this entry in future requests.
+      - name: classId
+        type: u32
+        description: >
+          Param class ID for the item data in `params`
+      - name: avatarId
+        type: u64
+        description: >
+          Avatar ID of the item owner.
+      - type: u8
+        name: useTemplate
+        description: >
+          Has to be 1 and `templateId` needs to be set in
+          order for the client to correctly display the item.
+      - branch:
+          field: useTemplate
+          test_equal: 1
+          isTrue:
+            fields:
+            - name: templateId
+              type: uuid
+              description: >
+                Guid of the items template, references content.db:items.
+      - type: u32
+      - type: bool
+      - name: params
+        type: { name: array, len: _remainder, type: u8 }
+        description: >
+          Item parameters of class `classId`. All necessary item 
+          attributes need to be sent here, even though the client
+          has access to them too, via content.db:items. 
+          Also, this field is not prefixed by any length information.
+  CPktItemUpdate_37: # duplicate of CPktItemUpdate
+    id: 0x37
+    subId: 0x00
+    inherit: CPktItemUpdate
+    description: >
+      Duplicate of CPktItemUpdate
+    relatesTo:
+      - CPktItemUpdate
+      
