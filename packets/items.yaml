@@ -6,8 +6,15 @@ packets:
     subId: 0x00
     inherit: CPkt
     fields:
-      - type: uuid
-      - type: u64
+      - name: id
+        type: uuid
+        description: >
+          Unique ID for this specific instance of the item, as 
+          initially defined by CPktItemUpdate.
+      - name: avatarId
+        type: u64
+        description: >
+          Avatar ID of the item owner.
       - type: u16
       - type: cstring
       - type: i32

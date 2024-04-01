@@ -1,0 +1,213 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  oaPktSKUBundleSyncRequest:
+    id: 0x8c
+    subId: 0x1f
+    inherit: CPkt
+    fields:
+      - name: itemCount
+        type: u32
+      - name: items
+        type: { name: array, len: itemCount, type: :CashItemRequestEntry }
+  oaPktSKUBundleSyncAcknowledge:
+    id: 0x8c
+    subId: 0x20
+    inherit: CPkt
+    fields:
+      - type: u32
+      - name: skuItemCount
+        type: u32
+      - name: skuItems
+        type: { name: array, len: skuItemCount, type: :CashItemSKUItemEntry }
+      - name: bundleItemCount
+        type: u32
+      - name: bundleItems
+        type: { name: array, len: bundleItemCount, type: :CashItemSKUBundleEntry }
+      - name: deletedItemsCount
+        type: u32
+      - name: deletedItemIds
+        type: { name: array, len: deletedItemsCount, type: cstring }
+      - name: deletedBundlesCount
+        type: u32
+      - name: deletedBundleIds
+        type: { name: array, len: deletedBundlesCount, type: cstring }
+  oaPktCashItemVendorSyncRequest:
+    id: 0x8c
+    subId: 0x21
+    inherit: CPkt
+    fields:
+      - name: itemCount
+        type: u32
+      - name: items
+        type: { name: array, len: itemCount, type: :CashItemRequestEntry }
+  oaPktCashItemVendorSyncAcknowledge:
+    id: 0x8c
+    subId: 0x22
+    inherit: CPkt
+    fields:
+      - type: u32
+      - name: itemCount
+        type: u32
+      - name: items
+        type: { name: array, len: itemCount, type: :CashItemVendorEntry }
+      - name: deletedCount
+        type: u32
+      - name: deletedIds
+        type: { name: array, len: deletedCount, type: cstring }
+  oaPktShopCartBuyRequest:
+    id: 0x8c
+    subId: 0x23
+    inherit: CPkt
+    fields:
+      - type: u32
+      - type: u32
+        name: items
+      - type: { name: array, len: items, type: :ShoppingCartEntry }
+        name: shoppingCart
+  oaPktSteamMicroTxn:
+    id: 0xb6
+    subId: 0x3f
+    inherit: oaPktClientToClusterNode
+structures:
+  CashItemRequestEntry:
+    fields:
+      - type: cstring
+        name: id
+      - type: u32
+        name: version
+  CashItemSKUBundleEntry:
+    fields:
+      - type: u32
+        name: cashPrice
+      - type: bool
+        name: isInStock
+      - type: bool
+        name: isHot
+      - type: bool
+        name: isNew
+      - type: u32
+        name: version
+      - type: bool
+        name: isVisible
+      - type: bool
+        name: isTradable
+      - type: bool
+        name: isFeatured
+      - type: u32
+        name: quantity
+      - type: u32
+        name: discount
+      - type: cstring
+        name: bundleId
+      - type: cstring
+        name: displayName
+      - type: cstring
+        name: description
+      - type: cstring
+        name: icon
+      - type: cstring
+        name: itemListAndCount
+      - type: cstring
+        name: dateStart
+      - type: cstring
+        name: dateEnd
+  CashItemSKUItemEntry:
+    fields:
+      - type: u32
+        name: cashPrice
+      - type: u32
+        name: rentalDuration
+      - type: bool
+        name: isInStock
+      - type: bool
+        name: isHot
+      - type: bool
+        name: isNew
+      - type: u32
+        name: version
+      - type: bool
+        name: isVisible
+      - type: bool
+        name: isTradable
+      - type: bool
+        name: isFeatured
+      - type: u32
+        name: quantity
+      - type: u32
+        name: discount
+      - type: cstring
+        name: skuId
+      - type: cstring
+        name: displayName
+      - type: cstring
+        name: description
+      - type: cstring
+        name: referenceItemName
+      - type: cstring
+        name: referenceItemGuid
+      - type: cstring
+        name: skuCode
+      - type: cstring
+        name: dateStart
+      - type: cstring
+        name: dateEnd
+  CashItemVendorEntry:
+    fields:
+      - name: version
+        type: u32
+      - name: vendorID
+        type: cstring
+      - name: vendorName
+        type: cstring
+      - name: skuList
+        type: cstring
+      - name: bundleList
+        type: cstring
+  ShoppingCartEntry:
+    fields:
+      - name: id
+        type: uuid
+        description: >
+          Item id from content.db:items
+      - name: count
+        type: u32 
+        description: >
+          Count how many items are to be bought.
+      - name: sku_version
+        type: i32 
+        description: >
+          Cash shop database version. Only relevant if is_sku = `1`,
+          otherwise this is set to `-1`.
+      - type: bool
+        description: >
+          Always false.
+      - type: u32
+      - type: bool
+      - name: is_sku
+        type: u32
+        description: >
+          Equals `1` if item is to be bough from cash shop.
+
+# Adventure Inc
+#oaPktShopCartBuyRequest { field8_0x8: 0, field_1: 0, items: 1, shopping_cart: [ShoppingCartEntry { field_0: dfad1c06-b7e3-4493-84eb-ccf2a3408946, field_1: 1, field_2: -1, field_3: false, field_4: 0, field_5: true, field_6: 0 }] }
+# Cash Shop
+#oaPktShopCartBuyRequest { field8_0x8: 0, field_1: 0, items: 1, shopping_cart: [ShoppingCartEntry { field_0: 8642227d-42fd-4763-b773-59c8f590970c, field_1: 1, field_2: 123, field_3: false, field_4: 32756, field_5: true, field_6: 1 }] }
+#oaPktShopCartBuyRequest { field8_0x8: 0, field_1: 0, items: 1, shopping_cart: [ShoppingCartEntry { field_0: e6327f16-4ac7-4eb4-a256-0562328469d4, field_1: 1, field_2: 123, field_3: false, field_4: 32756, field_5: true, field_6: 1 }] }
+#oaPktShopCartBuyRequest { field8_0x8: 0, field_1: 0, items: 1, shopping_cart: [ShoppingCartEntry { field_0: 6790dabb-4f1f-4a0d-b63c-893d6a7b69f9, field_1: 1, field_2: 123, field_3: false, field_4: 32756, field_5: true, field_6: 1 }] }
+# Meta Morph Voucer
+#oaPktShopCartBuyRequest { field8_0x8: 0, field_1: 0, items: 1, shopping_cart: [ShoppingCartEntry { field_0: f3d4f6c9-cfa1-44b1-9fb4-3e6bd0b339e0, field_1: 1, field_2: 123, field_3: false, field_4: 0, field_5: true, field_6: 1 }] }
+# Lucked Up
+#oaPktShopCartBuyRequest { field8_0x8: 0, field_1: 0, items: 1, shopping_cart: [ShoppingCartEntry { field_0: 54d06a37-fac3-4197-a3e3-aabbb99f4394, field_1: 1, field_2: -1, field_3: false, field_4: 0, field_5: true, field_6: 0 }] }
+#oaPktShopCartBuyRequest { field8_0x8: 0, field_1: 0, items: 1, shopping_cart: [ShoppingCartEntry { field_0: 54d06a37-fac3-4197-a3e3-aabbb99f4394, field_1: 7, field_2: -1, field_3: false, field_4: 32756, field_5: true, field_6: 0 }] }
+# Arms
+#oaPktShopCartBuyRequest { field8_0x8: 0, field_1: 0, items: 1, shopping_cart: [ShoppingCartEntry { field_0: c95b6059-7c98-4e84-a24e-51932951f553, field_1: 1, field_2: -1, field_3: false, field_4: 0, field_5: true, field_6: 0 }] }
+# Bling
+#oaPktShopCartBuyRequest { field8_0x8: 0, field_1: 0, items: 1, shopping_cart: [ShoppingCartEntry { field_0: f2656b91-41e7-43ac-835f-4e10312d0395, field_1: 1, field_2: -1, field_3: false, field_4: 0, field_5: true, field_6: 0 }] }
+# Show it off
+#oaPktShopCartBuyRequest { field8_0x8: 0, field_1: 0, items: 1, shopping_cart: [ShoppingCartEntry { field_0: 481a1f1a-0c33-4517-9d30-1e546970a917, field_1: 1, field_2: -1, field_3: false, field_4: 0, field_5: true, field_6: 0 }] }
+# Clan
+#oaPktShopCartBuyRequest { field8_0x8: 0, field_1: 0, items: 1, shopping_cart: [ShoppingCartEntry { field_0: 922a4675-63d0-4e20-9216-8bd60760b14d, field_1: 1, field_2: -1, field_3: false, field_4: 0, field_5: true, field_6: 0 }] }
+# Bar
+#oaPktShopCartBuyRequest { field8_0x8: 0, field_1: 0, items: 1, shopping_cart: [ShoppingCartEntry { field_0: a357c4d1-0b40-4125-a9f5-79efe7835d76, field_1: 1, field_2: -1, field_3: false, field_4: 0, field_5: true, field_6: 0 }] }
+#oaPktShopCartBuyRequest { field8_0x8: 0, field_1: 0, items: 1, shopping_cart: [ShoppingCartEntry { field_0: a357c4d1-0b40-4125-a9f5-79efe7835d76, field_1: 3, field_2: -1, field_3: false, field_4: 32756, field_5: true, field_6: 0 }] }
