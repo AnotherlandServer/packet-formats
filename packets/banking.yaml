@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  oaPktAccountBankRequest:
+    id: 0x8c
+    subId: 0x45
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: u16
+      - type: nativeparam
