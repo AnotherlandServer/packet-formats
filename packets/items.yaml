@@ -82,4 +82,7 @@ packets:
       Duplicate of CPktItemUpdate
     relatesTo:
       - CPktItemUpdate
-      
+  oaPktCrafting:
+    id: 0x8c
+    subId: 0x15
+    inherit: oaPktClientToClusterNode
