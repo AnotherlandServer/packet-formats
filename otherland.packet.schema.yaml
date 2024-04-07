@@ -63,7 +63,8 @@ $defs:
               A list of packets this packet relates to. This is intended to 
               be used as an informative list of references to other packets.
             type: array
-            items: string
+            items:
+              type: string
 
   idByte:
     type: integer
