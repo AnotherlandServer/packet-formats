@@ -31,7 +31,7 @@ packets:
       `containerID` is referencing a well known id for certain containers.
       Possible values are:
         - 0 - CT_INVENTORY
-        - 1 - unknown
+        - 1 - Equipped
         - 2 - CT_STORAGE
         - 3 = unknown
         - 5 = unknown (possibly Bank account)
