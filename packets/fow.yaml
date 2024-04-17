@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  oaPktFOWUpdate:
+    id: 0xa9
+    subId: 0x0
+    inherit: CPkt
+    description: |
+      Updates and initializes the fog of war on the games MaxiMap.
+      Only after receiving this message, the client will send oaPktFOWRequest messages,
+      when discovering new tiles of the Map.
+      See RUFloorMapInfo objects in Otherland.upk for additional context.
+    relatesTo:
+      - oaPktFOWRequest
+    fields:
+      - name: zoneId
+        type: u32
+        description: |
+          ZoneID of the MaxiMap.
+          Heads-up! This is NOT the same ZoneID as in the instances.db, but instead
+          refers to a map-local ZoneID, defined by a matching RUFloorMapInfo object.
+      - name: bytesPerRow # not sure
+        type: u32
+      - type: u32 # unused
+        description: Set to zero
+      - type: :Buffer
+  oaPktFOWRequest:
+    id: 0xa9
+    subId: 0x1
+    inherit: CPkt
+    relatesTo:
+      - oaPktFOWUpdate
+    fields:
+      - name: zoneId
+        type: u32
+      - name: tileX
+        type: u32
+      - name: tileY
+        type: u32 
