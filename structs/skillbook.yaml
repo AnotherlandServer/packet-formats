@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+structures:
+  ClassSkills:
+    fields:
+      - name: classHash
+        type: u32
+        description: Always must be set to 0x81E0A735
+      - name: count
+        type: u32
+      - name: skills
+        type: { name: array, len: count, type: :ClassSkill }
+  ClassSkill:
+    fields:
+      - name: version
+        type: u32
+        description: Always must be set to 0
+      - type: uuid
+      - name: contentId
+        type: uuid
+      - name: group
+        type: cstring
+      - type: u32
+      

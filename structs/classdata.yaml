@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+structures:
+  HeavyData:
+    fields:
+      - name: classHash
+        type: u32
+        description: Always must be set to 0x6206ed68
+      - name: version
+        type: u32
+        description: Always must be set to 1
+      - type: u32
+      - type: u32
+      - type: u32
+      - type: u32
+      - name: data
+        type: { name: array, len: 23, type: :HeavyDataCollection } 
+  HeavyDataCollection:
+    fields:
+      - name: entryCount
+        type: u32
+      - name: entries
+        type: { name: array, len: entryCount, type: :HeavyDataEntry }
+  HeavyDataEntry:
+    fields:
+      - type: cstring
+      - type: u32
+      - type: u32
