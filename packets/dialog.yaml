@@ -57,8 +57,9 @@ structures:
       - type: :oaDialogNode
         name: dialogNode
       - type: u32
-        name: nodeCount
-      - type: { name: array, len: nodeCount, type: :oaDialogNode }
+        name: choiceCount
+      - type: { name: array, len: choiceCount, type: :oaDialogChoice }
+        name: choices
       - type: bool
       - type: u32
         name: componentFactoryId
@@ -81,6 +82,21 @@ structures:
         name: dialogueSerialNumber
       - type: cstring
         name: tutorialVo
+  oaDialogChoice:
+    fields:
+      - type: u32
+      - name: emoteIndex
+        type:
+          name: u32
+          enum:
+            0: close
+            1: approve
+            2: reject
+            3: next
+            4: tellMore
+      - type: cstring
+        name: dialogueSerialNumber
+      - type: cstring
   dialogStructure2:
     fields:
       - type: u64
