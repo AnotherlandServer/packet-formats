@@ -7,8 +7,10 @@ packets:
     inherit: CPkt
     fields:
       - type: u32
-      - type: u64
-      - type: u64
+      - name: instigator
+        type: u64
+      - name: target
+        type: u64
       - type: uuid
   oaPktDialogChoice:
     id: 0xa6
@@ -33,3 +35,64 @@ packets:
     fields:
       - type: u64
       - type: cstring
+  CPktStream_166_2:
+    id: 0xa6
+    subId: 0x2
+    inherit: CPkt
+    fields:
+      - type: :dialogStructure
+  CPktStream_166_3:
+    id: 0xa6
+    subId: 0x3
+    inherit: CPkt
+    fields:
+      - type: :dialogStructure2
+structures:
+  dialogStructure:
+    fields:
+      - type: u64
+        name: npcId
+      - type: u32
+        name: dialogId
+      - type: :oaDialogNode
+        name: dialogNode
+      - type: u32
+        name: nodeCount
+      - type: { name: array, len: nodeCount, type: :oaDialogNode }
+      - type: bool
+      - type: u32
+        name: componentFactoryId
+      - type: u32
+      - type: u32
+      - type: u32
+      #- type: u32
+      #  name: nodes
+      #- type: { name: array, len: nodes, type: :oaDialogNode }
+      # other data if prev bool = true, yet to be decoded
+      # see oaGameClientApp::FUN_14141f830
+      # maybe related to quests?
+  oaDialogNode:
+    fields:
+      - type: u32
+        name: dialogueId
+      - type: u32
+        name: dialogContentId
+      - type: cstring
+        name: dialogueSerialNumber
+      - type: cstring
+        name: tutorialVo
+  dialogStructure2:
+    fields:
+      - type: u64
+        name: npcId
+      - type: u32
+      - type: cstring
+      - type: u32
+        name: nodeCount
+      - type: { name: array, len: nodeCount, type: :oaDialogNode }
+      - type: bool
+      - type: u32
+        name: componentFactoryId
+      - type: u32
+      - type: u32
+      - type: u32
