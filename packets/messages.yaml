@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  CPktGameMsg:
+    id: 0x3b
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: u64
+      - name: msgType
+        type:
+          name: u32
+          enum:
+            0: normal
+            1: combat
+            2: console
+            3: clan
+            4: party
+            5: xp
+            6: loot
+            8: quest
+            9: pop up
+            10: illegal_zone
+      - name: message
+        type: cstring
+      - type: u8
+      - type: :Buffer
