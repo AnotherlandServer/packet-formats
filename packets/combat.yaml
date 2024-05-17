@@ -28,6 +28,13 @@ packets:
       - name: hp
         type: i32
       - type: u32
+  oaPktPvp:
+    id: 0x45
+    subId: 0x00
+    inherit: CPkt
+    fields:
+      - type: u64
+      - type: bool
 structures:
   RespawnOption:
     fields:
