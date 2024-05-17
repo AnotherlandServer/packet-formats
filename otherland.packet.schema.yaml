@@ -226,6 +226,8 @@ $defs:
       - type: integer
         minimum: 0
       - type: string
+      - type: string
+        const: _eof
 
   enumFieldType:
     type: object
