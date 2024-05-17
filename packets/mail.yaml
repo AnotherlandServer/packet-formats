@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  CPktMailUpdate:
+    id: 0x42
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: uuid
+      - type: u32
+      - type: u64
+      - type: { name: array, len: _eof, type: u8 }
+  CPktAccountMessageRequest:
+    id: 0x84
+    subId: 0x0
+    inherit: CPkt
+    fields:
+    - type: u16
+      name: msgType
+    - type: uuid
+    - type: u64
+    - type: u32
+    - branch:
+        field: msgType
+        test_equal: 2
+        isTrue:
+          fields:
+            - type: uuid
+            - type: cstring
+            - type: uuid
+            - type: u32
+    - branch:
+        field: msgType
+        test_equal: 3
+        isTrue:
+          fields:
+            - type: uuid
+            - type: cstring
+            - type: uuid
+            - type: u32
+    - branch:
+        field: msgType
+        test_equal: 6
+        isTrue:
+          fields:
+            - type: cstring
+    - branch:
+        field: msgType
+        test_equal: 7
+        isTrue:
+          fields:
+            - type: cstring
+  CPktMailUpdate2:
+    id: 0x41
+    subId: 0x0
+    inherit: CPktMailUpdate
+  CPktAccountMessageUpdate:
+    id: 0x83
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: uuid
+      - type: u32
+      - type: { name: array, len: _eof, type: u8 }
