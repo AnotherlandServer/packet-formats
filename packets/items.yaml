@@ -68,7 +68,7 @@ packets:
       - type: u32
       - type: bool
       - name: params
-        type: { name: array, len: _remainder, type: u8 }
+        type: { name: array, len: _eof, type: u8 }
         description: >
           Item parameters of class `classId`. All necessary item 
           attributes need to be sent here, even though the client
