@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  oaPktQuestGiverStatus:
+    id: 0xa5
+    subId: 0x9
+    inherit: CPkt
+    fields:
+      - name: avatarCount1
+        type: u32
+      - name: enableQuestmarkerForAvatars
+        type: { name: array, len: avatarCount1, type: u64 }
+      - name: avatarCount2
+        type: u32
+      - name: disableQuestmarkerForAvatars
+        type: { name: array, len: avatarCount2, type: u64 }
+  oaPktQuestRequest:
+    id: 0xa5
+    subId: 0x4
+    inherit: CPkt
+    fields:
+      - type: u32
+      - type: u32
+      - type: u64
+      - type: u64
+      - type: u32
