@@ -35,6 +35,17 @@ packets:
     fields:
       - type: u64
       - type: bool
+  oaPktCombatUpdate:
+    id: 0x8c
+    subId: 0x8f
+    inherit: CPkt
+    fields:
+      - type: avatar_id
+      - type:
+          name: u8
+          enum:
+            1: ToggleOnCombat
+            2: ToggleOffCombat
 structures:
   RespawnOption:
     fields:
