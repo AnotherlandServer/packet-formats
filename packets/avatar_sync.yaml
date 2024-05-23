@@ -15,7 +15,7 @@ packets:
     subId: 0x0
     inherit: CPkt
     fields:
-      - type: u64
+      - type: avatar_id
         name: avatarId
       - type: u16
         name: alwaysZero
@@ -31,12 +31,12 @@ packets:
           isFalse:
             fields:
               - name: avatarId
-                type: u64
+                type: avatar_id
           isTrue:
             fields:
               - type: bool
               - name: avatarId
-                type: u64
+                type: avatar_id
               - type: cstring
                 name: name
               - type: u32

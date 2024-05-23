@@ -55,6 +55,6 @@ packets:
     inherit: CPkt
     fields:
       - name: avatarId
-        type: u64
+        type: avatar_id
       - name: command
         type: nativeparam

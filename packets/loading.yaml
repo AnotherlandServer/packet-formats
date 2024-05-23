@@ -30,7 +30,7 @@ packets:
       - name: avatarName
         type: cstring
       - name: avatarId
-        type: u64
+        type: avatar_id
       - name: classId
         type: u32
       - name: params

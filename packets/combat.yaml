@@ -7,7 +7,7 @@ packets:
     inherit: CPkt
     fields:
       - name: avatarId
-        type: u64
+        type: avatar_id
       # here follows a binary struct that I have yet to reverse
   oaPktRespawnOptions:
     id: 0xb0
@@ -24,7 +24,7 @@ packets:
     inherit: CPkt
     fields:
       - name: avatarId
-        type: u64
+        type: avatar_id
       - name: hp
         type: i32
       - type: u32

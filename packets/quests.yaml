@@ -9,15 +9,11 @@ packets:
       - name: avatarCount1
         type: u32
       - name: enableQuestmarkerForAvatars
-        type: { name: array, len: avatarCount1, type: u64 }
+        type: { name: array, len: avatarCount1, type: avatar_id }
       - name: avatarCount2
         type: u32
       - name: disableQuestmarkerForAvatars
-        type: { name: array, len: avatarCount2, type: u64 }
-  oaPktQuestRequest:
-    id: 0xa5
-    subId: 0x4
-    inherit: CPkt
+        type: { name: array, len: avatarCount2, type: avatar_id }
     fields:
       - type: u32
       - type: u32

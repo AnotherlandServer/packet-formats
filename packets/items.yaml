@@ -12,7 +12,7 @@ packets:
           Unique ID for this specific instance of the item, as 
           initially defined by CPktItemUpdate.
       - name: avatarId
-        type: u64
+        type: avatar_id
         description: >
           Avatar ID of the item owner.
       - type: u16
@@ -48,7 +48,7 @@ packets:
         description: >
           Param class ID for the item data in `params`
       - name: avatarId
-        type: u64
+        type: avatar_id
         description: >
           Avatar ID of the item owner.
       - type: u8

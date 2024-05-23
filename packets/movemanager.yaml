@@ -17,7 +17,7 @@ packets:
       - name: moverKey
         type: u16
       - name: avatarId
-        type: u64
+        type: avatar_id
       - name: seconds
         type: f64
   oaPktMoveManagerStateChanged:
@@ -35,7 +35,7 @@ packets:
       - name: newVersion
         type: u16
       - name: avatarId
-        type: u64
+        type: avatar_id
 structures:
   Physics:
     fields:
