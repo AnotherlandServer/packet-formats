@@ -8,19 +8,23 @@ packets:
     fields:
       - type: u32
       - name: instigator
-        type: u64
+        type: avatar_id
       - name: target
-        type: u64
+        type: avatar_id
       - type: uuid
   oaPktDialogChoice:
     id: 0xa6
     subId: 0x1
     inherit: CPkt
     fields:
-      - type: u64
-      - type: u64
-      - type: u32
+      - name: instigator
+        type: avatar_id
+      - name: target
+        type: avatar_id
+      - type: i32
+        name: dialog_id
       - type: cstring
+        name: dialog_choice_serial
   oaPktDialogEnd:
     id: 0xa6
     subId: 0x4
@@ -50,9 +54,9 @@ packets:
 structures:
   dialogStructure:
     fields:
-      - type: u64
+      - type: avatar_id
         name: npcId
-      - type: u32
+      - type: i32
         name: dialogId
       - type: :oaDialogNode
         name: dialogNode
@@ -63,9 +67,8 @@ structures:
       - type: bool
       - type: u32
         name: componentFactoryId
-      - type: u32
-      - type: u32
-      - type: u32
+      - type: :oaDialogQuestPrototype
+        name: questPrototype
       #- type: u32
       #  name: nodes
       #- type: { name: array, len: nodes, type: :oaDialogNode }
@@ -74,7 +77,7 @@ structures:
       # maybe related to quests?
   oaDialogNode:
     fields:
-      - type: u32
+      - type: i32
         name: dialogueId
       - type: u32
         name: dialogContentId
@@ -99,7 +102,7 @@ structures:
       - type: cstring
   dialogStructure2:
     fields:
-      - type: u64
+      - type: avatar_id
         name: npcId
       - type: u32
       - type: cstring
@@ -112,3 +115,11 @@ structures:
       - type: u32
       - type: u32
       - type: u32
+  oaDialogQuestPrototype:
+    fields:
+      - type: u32
+        description: Always has to be set to zero.
+      - type: u32
+        name: quest_id
+      - type: u32
+        description: Unused
