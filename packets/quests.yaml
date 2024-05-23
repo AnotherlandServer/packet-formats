@@ -1,6 +1,56 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
 packets:
+  oaPktQuestUpdate:
+    id: 0xa5
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: avatar_id
+        name: player
+      - type: u32
+        name: questId
+      - type: avatar_id
+      - type: bool
+      - type: u32
+        name: entryCount
+      - type: { name: array, len: entryCount, type: :QuestUpdateData }
+      - type: cstring
+  CPktStream_165_2:
+    id: 0xa5
+    subId: 0x2
+    inherit: CPkt
+    fields:
+      - type: :oaQuestTemplate
+      - type: u32
+        name: conditions
+      - type: { name: array, len: conditions, type: :oaQuestCondition }
+      - type: u32
+        name: rewardsCount1
+      - type: { name: array, len: rewardsCount1, type: :oaQuestReward }
+      - type: u32
+        name: rewardsCount2
+      - type: { name: array, len: rewardsCount2, type: :oaQuestReward }
+  oaPktQuestRequest:
+    id: 0xa5
+    subId: 0x4
+    inherit: CPkt
+    fields:
+      - type:
+          enum:
+            0: accept
+            2: abandon
+            4: request
+            5: query_active
+          name: u32
+        name: request
+      - type: i32
+        name: quest_id
+      - type: avatar_id
+        name: player
+      - type: avatar_id
+        name: quest_giver
+      - type: u32
   oaPktQuestGiverStatus:
     id: 0xa5
     subId: 0x9
@@ -14,9 +64,95 @@ packets:
         type: u32
       - name: disableQuestmarkerForAvatars
         type: { name: array, len: avatarCount2, type: avatar_id }
+structures:
+  oaQuestTemplate:
+    fields:
+      - type: i32
+        name: questId
+      - type: cstring
+      - type: i32
+      - type: i32
+      - type: i32
+        name: level
+      - type: uuid
+        name: worldGuid
+      - type: i32
+      - type: cstring
+      - type: i32
+      - type: i32
+        name: timeLimitOption
+      - type: i32
+        name: timeLimitSec
+      - type: i32
+      - type: i32
+      - type: u32
+      - type: i32
+      - type: cstring
+
+      - type: uuid
+      - type: i32
+      - type: i32
+        name: expReward
+      - type: i32
+        name: bitReward
+      - type: :oaQuestBeacon
+      - type: :oaQuestBeacon
+      - type: i32
+      - type: i32
+  oaQuestBeacon:
+    fields:
+      - type: uuid
+      - type: uuid
+      - type: :NetworkVec3
+      - type: u32
+      - type: u32
+  oaQuestCondition:
+    fields:
+      - type: i32
+        name: questId
+      - type: i32
+        name: conditionId
+      - type: i32
+      - type: i32
+      - type: cstring
+      - type: i32
+        name: requiredCount
+      - type: i32
+      - type: i32
+      - type: cstring
+      - type: i32
+      - type: cstring
+      - type: i32
+        name: greaterThanOne
+        description: Has to be > 1
+      - type: cstring
+      - type: i32
+      - type: cstring
+      - type: :oaQuestBeacon
+  oaQuestReward:
+    fields:
+      - type: i32
+      - type: i32
+      - type: cstring
+      - type: i32
+      - type: cstring
+      - type: i32
+      - type: i32
+      - type: i32
+      - type: :QuestData
+      - type: i32
+      - type: i32
+  QuestData:
+    fields:
+      - type: u32
+        name: count
+      - type: { name: array, len: count, type: :QuestDataEntry }
+  QuestDataEntry:
+    fields:
+      - type: cstring
+      - type: cstring
+  QuestUpdateData:
     fields:
       - type: u32
       - type: u32
       - type: u64
-      - type: u64
-      - type: u32
