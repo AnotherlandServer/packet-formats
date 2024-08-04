@@ -46,7 +46,14 @@ packets:
     inherit: CPkt
     fields:
       - type: u8
-      - type: u8
+      - name: destination
+        type:
+          name: u8
+          enum:
+            0: Unknown0
+            1: Client
+            2: Unknown2
+            3: Unknown3
       - type: u64
       - type: packet
   oaPktCheatingClusterNode:
