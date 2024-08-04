@@ -1,5 +1,18 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
+# Npc Quest flags:
+# Bit 1 is toggled with oaPktQuestGiverStatus
+# 1 - Active
+# 2 - RewardEnding
+# 4 - Interact
+# 8 - InProgress
+# 16 - ???
+# 32 - Daily
+
+# Quest Target Flags
+# 0 - Not Started
+
+
 packets:
   oaPktQuestUpdate:
     id: 0xa5
@@ -12,6 +25,7 @@ packets:
         name: questId
       - type: avatar_id
       - type: bool
+        name: questFailed
       - type: u32
         name: entryCount
       - type: { name: array, len: entryCount, type: :QuestUpdateData }
@@ -39,18 +53,21 @@ packets:
       - type:
           enum:
             0: accept
+            1: return
             2: abandon
             4: request
             5: query_active
           name: u32
         name: request
       - type: i32
-        name: quest_id
+        name: questId
       - type: avatar_id
         name: player
       - type: avatar_id
-        name: quest_giver
+        name: questGiver
       - type: u32
+        description: >
+          Seems to contain uninitialized data.
   oaPktQuestGiverStatus:
     id: 0xa5
     subId: 0x9
@@ -64,6 +81,63 @@ packets:
         type: u32
       - name: disableQuestmarkerForAvatars
         type: { name: array, len: avatarCount2, type: avatar_id }
+  CPktStream_165_7:
+    id: 0xa5
+    subId: 0x7
+    inherit: CPkt
+    fields:
+      - type: avatar_id
+        name: player
+      - type: { name: array, type: u8, len: 0x4e2 }
+        name: quest_list
+        description: >
+          This is a 10,000-bit bitfield, where each bit corresponds to a quest ID, 
+          marking it as active. Each bit position directly represents a quest ID 
+          from 0 to 9999, with the highest quest ID being 9999.
+  oaPktQuestEvent:
+    id: 0xa5
+    subId: 0x8
+    inherit: CPkt
+    fields:
+      - type: avatar_id
+      - type: i32
+        name: questId
+      - type: 
+          name: u32
+          enum:
+            0: newQuest
+            1: newQuest1
+            2: newQuest2
+            4: questAccepted
+            5: event5 # OpenQuestWindow
+            6: questFinished
+            7: questFailed
+            8: questAbandoned
+        name: event
+      - type: i32
+  oaPktQuestDebugRequest:
+    id: 0xa5
+    subId: 0xa
+    inherit: CPkt
+    fields:
+      - name: player
+        type: avatar_id
+      - name: quest_id
+        type: i32
+      - name: action
+        type: 
+          name: u32
+          enum:
+            0: finish
+            1: add
+            2: reset
+            3: complete
+            4: unknown
+            5: set_cycle
+            6: reload
+      - name: arg
+        type: cstring
+      - type: u32
 structures:
   oaQuestTemplate:
     fields:
