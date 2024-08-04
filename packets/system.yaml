@@ -38,7 +38,8 @@ packets:
           test_equal: 0
           isTrue:
             fields:
-              - type: u64
+              - name: gameClock
+                type: f64
           isFalse:
             fields:
             - branch:
@@ -54,7 +55,8 @@ packets:
                       test_equal: 19
                       isTrue:
                         fields:
-                          - type: u64
+                          - name: realmTime
+                            type: i64
                       isFalse:
                         fields:
                           - type: cstring
