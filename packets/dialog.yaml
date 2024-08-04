@@ -30,8 +30,10 @@ packets:
     subId: 0x4
     inherit: CPkt
     fields:
-      - type: u64
-      - type: u32
+      - type: avatar_id
+        name: playerId
+      - type: i32
+        name: dialogue_id
   oaPktDialogDebug:
     id: 0xa6
     subId: 0x5
@@ -65,6 +67,7 @@ structures:
       - type: { name: array, len: choiceCount, type: :oaDialogChoice }
         name: choices
       - type: bool
+        name: hasAdditionalComponent
       - type: u32
         name: componentFactoryId
       - type: :oaDialogQuestPrototype
