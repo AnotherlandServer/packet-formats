@@ -99,6 +99,22 @@ packets:
         type: cstring
       - name: data
         type: nativeparam
+  oaPktLoopActionIterruptible:
+    id: 0x8c
+    subId: 0x28
+    inherit: CPkt
+    fields:
+      - name: target
+        type: avatar_id
+      - name: command
+        type:
+          name: u16
+          enum:
+            0: PlayLoopActionInterruptible
+            1: PlayInterruptLoopAction
+            2: StopInterruptLoopAction
+      - name: animName
+        type: cstring
 structures:
   PortalAckPartA:
     fields:
