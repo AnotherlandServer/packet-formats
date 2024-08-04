@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+structures:
+  CooldownUpdate:
+    fields:
+      - name: entryCount
+        type: u32
+      - name: entries
+        type: { name: array, len: entryCount, type: :CooldownEntry }
+  CooldownEntry:
+    fields:
+      - type: u32
+      - type: bool
+      - type: f32
+      - type: f32

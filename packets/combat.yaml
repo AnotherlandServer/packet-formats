@@ -8,7 +8,7 @@ packets:
     fields:
       - name: avatarId
         type: avatar_id
-      # here follows a binary struct that I have yet to reverse
+      - type: :CooldownUpdate
   oaPktRespawnOptions:
     id: 0xb0
     subId: 0x1
