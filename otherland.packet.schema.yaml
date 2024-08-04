@@ -53,17 +53,13 @@ $defs:
               the current packet, appearing before the field list
               defined here.
             type: string
-          description:
-            description: >
-              A description of the packets content and function. This is 
-              intended to be a human readable text for documentation purposes.
-            type: string
           relatesTo:
             description: >
               A list of packets this packet relates to. This is intended to 
               be used as an informative list of references to other packets.
             type: array
-            items: string
+            items:
+              type: string
 
   idByte:
     type: integer
@@ -75,13 +71,6 @@ $defs:
       A reusable user defined type.
     allOf:
       - { $ref: "#/$defs/fieldsList" }
-      - type: object
-        properties:
-          description:
-            description: >
-              A description of the structures content and function. This is 
-              intended to be a human readable text for documentation purposes.
-            type: string
 
   fieldsList:
     type: object
@@ -92,6 +81,11 @@ $defs:
           Fields are serialized sequentially with no padding.
         type: array
         items: { $ref: "#/$defs/fieldItem" }
+      description:
+        description: >
+          A description of the object's content and function. This is 
+          intended to be a human readable text for documentation purposes.
+        type: string
 
   fieldItem:
     anyOf:
