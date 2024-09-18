@@ -26,3 +26,11 @@ structures:
       - type: cstring
       - type: u32
       - type: u32
+  oaPlayerClassData:
+    fields:
+      - name: classHash
+        type: u32
+        description: Always must be set to 0x9D35021A
+      - name: playerStance
+        type: u8
+      - type: u8

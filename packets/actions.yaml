@@ -115,6 +115,62 @@ packets:
             2: StopInterruptLoopAction
       - name: animName
         type: cstring
+  oaPktAbilityRequest:
+    id: 0x8c
+    subId: 0x9a
+    inherit: CPkt
+    fields:
+      - name: instigator
+        type: avatar_id
+      - type: uuid
+      - type: u32
+      - name: flag
+        type: u32
+      - branch:
+          field: flag
+          test_flag: 1
+          isTrue:
+            fields:
+              - name: cooldownGroupId
+                type: uuid
+      - branch:
+          field: flag
+          test_flag: 2
+          isTrue:
+            fields:
+              - type: cstring
+      - branch:
+          field: flag
+          test_flag: 4
+          isTrue:
+            fields:
+              - type: u32
+      - branch:
+          field: flag
+          test_flag: 8
+          isTrue:
+            fields:
+              - type: u32
+      - branch:
+          field: flag
+          test_flag: 16
+          isTrue:
+            fields:
+              - type: :NetworkVec4
+      - branch:
+          field: flag
+          test_flag: 32
+          isTrue:
+            fields:
+              - type: :NetworkVec3
+  oaPktThreatListUpdate:
+    id: 0x8c
+    subId: 0x96
+    inherit: CPkt
+    fields:
+      - type: avatar_id
+      - type: bool
+      - type: avatar_id
 structures:
   PortalAckPartA:
     fields:

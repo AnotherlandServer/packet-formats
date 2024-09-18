@@ -21,4 +21,26 @@ structures:
       - name: group
         type: cstring
       - type: u32
-      
+  oaAbilityBarReferences:
+    fields:
+      - name: classHash
+        type: u32
+        description: Always must be set to 0xFE0D0DC2
+      - name: version
+        type: u32
+        description: Always must be set to 1
+      - name: count
+        type: u32
+      - name: mainSkillBar
+        type:
+          name: array
+          type: :AbilityBarReference
+          len: count
+      - name: singleSlotBar
+        type: :AbilityBarReference
+  AbilityBarReference:
+    fields:
+      - name: id
+        type: u32
+      - name: skill
+        type: cstring
