@@ -14,40 +14,48 @@ packets:
         type: { name: cstring, maxlen: 256}
       - name: password
         type: { name: cstring, maxlen: 128 }
-      - name: steamId
-        type: { name: cstring, maxlen: 64 } 
-        description: > 
-          (Unverified) Steam id used for authenticating the steamworks sdk.. 
+      - type: { name: cstring, maxlen: 64 } 
+        description: Unused
       - type: u32
       - type: bool
-      - name: magicBytes
+      - name: fingerprint
         type: { name: array, len: 16, type: u8 }
         description: >
-          A seemingly unstructured 128-bit value present in several "initiation"
-          packets like login. Might be some kind of additional token used for
-          authentication or session verification.
+          System data fingerprint
       - name: systemInfo
         type: { name: array, len: 30, type: wstring }
         description: >
           A list of several system parameters like os version, 
           hardware and network interfaces among others.
       - type: u32
+      - type: i32
+      - type: i32
       - type: u32
+      - name: loginType
+        type: 
+          name: u16
+          enum:
+            0: normal
+            1: steam
+      - name: steamAppId
+        type: u32
+      - name: steamId
+        type: u64
+      - name: steamAuthSessionTicketLen
+        type: u16
       - type: u32
-      - type: u32
-      - type: u16
-      - type: u32
-      - type: u64
-      - type: u16
-      - type: u32
-      - name: steamAuthenticationToken
-        type: { name: cstring, maxlen: 1024} # this might be a steam authentication token
+      - name: steamAuthSessionTicketLen2
+        type: u16
+      - name: steamAuthSessionTicket
+        type: { name: array, len: steamAuthSessionTicketLen2, type: u8 } # this might be a steam authentication token
         description: >
           (Unverified) Steam authentication token for authenticating the steamworks sdk.
       - type: u32
       - type: cstring
+        name: screenResolution
       - type: cstring
       - type: cstring
+        name: os
   CPktLoginResult:
     id: 0x22
     subId: 0x00
@@ -80,7 +88,7 @@ packets:
             fields:
             - type: bool
             - name: realmId
-              type: u32
+              type: i32
             - name: realmIp # ip of realm server to connect to after login
               type: u32
             - name: realmPort # port of realm server to connect to after login

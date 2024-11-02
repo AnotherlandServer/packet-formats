@@ -24,8 +24,10 @@ packets:
     relatesTo:
       - oaPktRealmStatusList
     fields:
-      - type: u32
-      - type: u32
+      - type: i32
+        name: realmId
+      - type: i32
+        name: channelId
   oaPktRealmStatusList:
     id: 0xa4
     subId: 0x00
@@ -48,7 +50,7 @@ structures:
       is expected to be given.
     fields:
       - name: id
-        type: u32
+        type: i32
       - name: name
         type: cstring
       - name: channelCount

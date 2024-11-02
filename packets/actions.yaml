@@ -122,7 +122,8 @@ packets:
     fields:
       - name: instigator
         type: avatar_id
-      - type: uuid
+      - name: itemId
+        type: uuid
       - type: u32
       - name: flag
         type: u32
@@ -131,20 +132,22 @@ packets:
           test_flag: 1
           isTrue:
             fields:
-              - name: cooldownGroupId
+              - name: skillId
                 type: uuid
       - branch:
           field: flag
           test_flag: 2
           isTrue:
             fields:
-              - type: cstring
+              - name: targetInfo
+                type: cstring
       - branch:
           field: flag
           test_flag: 4
           isTrue:
             fields:
-              - type: u32
+              - name: toggleMode
+                type: u32
       - branch:
           field: flag
           test_flag: 8
@@ -156,7 +159,8 @@ packets:
           test_flag: 16
           isTrue:
             fields:
-              - type: :NetworkVec4
+              - name: targetRotation
+                type: :NetworkVec4
       - branch:
           field: flag
           test_flag: 32
