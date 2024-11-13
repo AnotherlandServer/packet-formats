@@ -34,9 +34,9 @@ packets:
       - name: classId
         type: u32
       - name: params
-        type: :Buffer
+        type: buffer
       - name: movement
-        type: :Buffer
+        type: buffer
       - name: hasGuid
         type: bool
       - branch:

@@ -7,7 +7,7 @@ packets:
     inherit: CPkt
     fields:
       - name: data
-        type: :Buffer
+        type: buffer
   CPktAvatarClientNotify:
     description: >
       Tells the client to despawn the avatar with the given avatarId.
@@ -65,11 +65,11 @@ packets:
                     fields:
                     - type: uuid 
                       name: flag_2_uuid
-              - type: :Buffer
+              - type: buffer
                 name: movement
       - type: u16
         name: updateSource
-      - type: :Buffer
+      - type: buffer
         name: params
   CPktStackedAvatarUpdate:
     id: 0x27
@@ -77,5 +77,5 @@ packets:
     inherit: CPkt
     fields:
       - type: u64
-      - type: :Buffer
+      - type: buffer
         name: params

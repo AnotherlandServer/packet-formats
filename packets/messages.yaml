@@ -24,4 +24,4 @@ packets:
       - name: message
         type: cstring
       - type: u8
-      - type: :Buffer
+      - type: buffer

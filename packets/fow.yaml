@@ -23,7 +23,7 @@ packets:
         type: u32
       - type: u32 # unused
         description: Set to zero
-      - type: :Buffer
+      - type: buffer
   oaPktFOWRequest:
     id: 0xa9
     subId: 0x1

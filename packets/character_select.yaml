@@ -181,16 +181,16 @@ structures:
       A player character definition.
     fields:
       - name: id
-        type: u32
+        type: i32
       - name: name
         type: cstring
       - name: worldId
-        type: u32
+        type: i32
         description: >
           Id used for referencing WorldDefs instance.db
       - name: params
-        type: :Buffer
+        type: buffer
         description: >
           Object parameters of class `player`. 
           See paramlist.ini for a description of it's attributes.
-      - type: u32
+      - type: i32
