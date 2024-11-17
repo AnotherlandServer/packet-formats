@@ -26,7 +26,7 @@ packets:
       - oaPktCharacterFailure
     fields:
       - name: characterId
-        type: u32
+        type: i32
   oaPktCharacterDeleteSuccess:
     id: 0x7e
     subId: 0x07
@@ -38,7 +38,7 @@ packets:
       - oaPktCharacterDelete
     fields:
       - name: characterId
-        type: u32
+        type: i32
   oaPktCharacterFailure:
     id: 0x7e
     subId: 0x0a
@@ -76,7 +76,7 @@ packets:
       - oaPktCharacterSelectSuccess
     fields:
       - name: characterId
-        type: u32
+        type: i32
       - type: u32
   oaPktCharacterSelectSuccess:
     id: 0x7e
