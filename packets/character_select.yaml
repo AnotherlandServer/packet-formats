@@ -95,8 +95,8 @@ packets:
         type: u32
       - name: clusterPort
         type: u16
-      - name: sessionId
-        type: uuid
+      - type: u64
+      - type: u64
   oaPktRequestCharacterList:
     id: 0x7e
     subId: 0x00
@@ -127,7 +127,9 @@ packets:
         description: >
           Id used for referencing WorldDefs instance.db
       - type: u16
+        name: channelId
       - type: uuid
+        description: Unused
   oaPktResponseSelectWorld:
     id: 0x7e
     subId: 0x0c
