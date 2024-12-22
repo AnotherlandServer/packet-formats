@@ -6,10 +6,14 @@ packets:
     subId: 0x1f
     inherit: CPkt
     fields:
-      - name: itemCount
+      - name: skuItemCount
         type: u32
-      - name: items
-        type: { name: array, len: itemCount, type: :CashItemRequestEntry }
+      - name: skuItems
+        type: { name: array, len: skuItemCount, type: :CashItemRequestEntry }
+      - name: bundleItemCount
+        type: u32
+      - name: bundleItems
+        type: { name: array, len: bundleItemCount, type: :CashItemRequestEntry }
   oaPktSKUBundleSyncAcknowledge:
     id: 0x8c
     subId: 0x20

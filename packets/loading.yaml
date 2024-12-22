@@ -49,12 +49,40 @@ packets:
     subId: 0x1
     inherit: CPkt
     fields:
-      - type: u32
-      - type: u64
+      - name: state
+        type:
+          name: u32
+          enum:
+            # See definitions in the OLPlayerClientState enum of
+            # the OLSeqAct_SetServerState unreal class
+            0: Offline
+            1: Transition
+            2: PlayerReceived
+            3: MapLoaded
+            4: PlayerLoaded
+            5: WaitingForInitialInterests
+            6: ReceivedInitialInterests
+            7: InitialInterestsLoaded
+            8: InGame
+      - type: avatar_id
   oaPktC2SConnectionState:
     id: 0x94
     subId: 0x0
     inherit: CPkt
     fields:
-      - type: u32
-      - type: u64
+      - name: state
+        type:
+          name: u32
+          enum:
+            # See definitions in the OLPlayerClientState enum of
+            # the OLSeqAct_SetServerState unreal class
+            0: Offline
+            1: Transition
+            2: PlayerReceived
+            3: MapLoaded
+            4: PlayerLoaded
+            5: WaitingForInitialInterests
+            6: ReceivedInitialInterests
+            7: InitialInterestsLoaded
+            8: InGame
+      - type: avatar_id
