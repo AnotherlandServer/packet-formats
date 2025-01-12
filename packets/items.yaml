@@ -86,3 +86,74 @@ packets:
     id: 0x8c
     subId: 0x15
     inherit: oaPktClientToClusterNode
+  oaPktItemStorage:
+    id: 0x8c
+    subId: 0x39
+    inherit: CPkt
+    relatesTo:
+      - ItemStorageSize
+      - ItemStorageParams
+    fields:
+      - name: storageId
+        type: uuid
+      - name: updateType
+        type:
+          name: u8
+          enum:
+            0x00: Unknown0_00 # Not processed by the client
+            0x01: Unknown0_01 # Not processed by the client
+            0x02: Unknown0_02 # Not processed by the client
+            0x03: Unknown0_03 # Not processed by the client
+            0x04: Unknown0_04 
+            0x05: Unknown0_05
+            0x08: Unknown0_08 # Not processed by the client
+            0x09: Unknown0_09 # Not processed by the client
+            0x0A: Unknown0_0A # Not processed by the client
+            0x0B: Unknown0_0B # Not processed by the client
+            0x0C: Unknown0_0C # Not processed by the client
+            0x0D: Unknown0_0D # Not processed by the client
+            0x0E: Unknown0_0E
+            0x0F: Unknown0_0F # Not processed by the client
+            0x10: Unknown0_10 # Not processed by the client
+            0x11: Unknown0_11 # Not processed by the client
+            0x12: Unknown0_12 # Not processed by the client
+            0x13: Unknown0_13 # Not processed by the client
+            0x14: Unknown0_14 # Not processed by the client
+            0x15: Unknown0_15 # Not processed by the client
+            0x17: Unknown0_17 # Not processed by the client
+            0x18: Unknown0_18 # Not processed by the client
+            0x19: Unknown0_19 # Not processed by the client
+            0x1a: Unknown0_1a # Not processed by the client
+            0x1b: Unknown0_1b # Not processed by the client
+            0x1c: Unknown0_1c # Not processed by the client
+            0x1d: Unknown0_1d # Not processed by the client
+            0x1e: Unknown0_1e # Not processed by the client
+            0x1f: Unknown0_1f # Not processed by the client
+            0x20: Unknown0_20 # Not processed by the client
+            0x21: Unknown0_21 # Not processed by the client
+            0x22: Unknown0_22 # Not processed by the client
+      - name: data
+        type: { name: array, len: _eof, type: u8 }
+        description: >
+          This packet is currently too complex for the yaml
+          package parser to handle. Instead, please refer to 
+          the linked structures to fill this field.
+structures:
+  ItemStorageSize:
+    description: >
+      For oaPktItemStorage of updateTypes 0, 0xc, 0xd and 0xe.
+    fields:
+      - name: storageSize
+        type: i32
+  ItemStorageParams:
+    description: >
+        For oaPktItemStorage of updateTypes 4 and 5.
+    fields:
+      - name: storageName
+        type: cstring
+      - name: storageSize
+        type: i32
+      - name: hasBling
+        type: bool
+      - name: blingAmount
+        type: i32
