@@ -20,12 +20,18 @@ packets:
           name: u8
           enum:
             0: party
-            1: say
+            1: local
+            2: localYell # unused by otherland
             3: clan
-            4: officer
+            4: clanOfficer
             5: whisper
             6: shout
-      - type: u64
+            7: broadcast
+            8: bubble # unused by otherland
+                      # This is supposed to be or'ed with the
+                      # previous values, but the client won't 
+                      # handle this correctly.
+      - type: avatar_id
       - type: cstring
         name: sender
       - type: cstring
