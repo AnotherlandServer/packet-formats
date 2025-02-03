@@ -196,7 +196,7 @@ packets:
           test_flag: 1
           isTrue:
             fields:
-              - type: u64
+              - type: avatar_id
                 name: target
       - branch:
           field: flag
@@ -204,12 +204,14 @@ packets:
           isTrue:
             fields:
               - type: :NetworkVec4
+                name: rotation
       - branch:
           field: flag
           test_flag: 4
           isTrue:
             fields:
               - type: :NetworkVec3
+                name: targetHitLocation
       - type: :NetworkVec3
         name: abilityInvokeLocation
       - type: u32 # this is followed by an array of n elements
@@ -281,19 +283,57 @@ structures:
     fields:
       - name: targetActor
         type: avatar_id
-      - name: movemanagerKeyUsedOnServer
-        type: u16
-      - name: newLocationForcedByEffect
-        type: :NetworkVec3
       - name: effectType
         type: i32
-      - name: combatFlags
-        type: i32
-      - name: totalDamageOrHealAmount
-        type: f32
-      - name: effectDelay
-        type: f32
-      - name: effectDurationFromServer
-        type: f32
-      - name: deltaHpId
-        type: i32
+      - name: flags
+        type: u16
+      - branch:
+          field: flags
+          test_flag: 1
+          isTrue:
+            fields:
+            - name: movemanagerKeyUsedOnServer
+              type: u16
+            - name: newLocationForcedByEffect
+              type: :NetworkVec3
+      - branch:
+          field: flags
+          test_flag: 2
+          isTrue:
+            fields:
+            - type: i32 # This is read as effectType too and overrides the previous value
+      - branch:
+          field: flags
+          test_flag: 4
+          isTrue:
+            fields:
+            - type: i32 
+              name: combatFlags
+      - branch:
+          field: flags
+          test_flag: 8
+          isTrue:
+            fields:
+            - name: totalDamageOrHealAmount
+              type: f32
+      - branch:
+          field: flags
+          test_flag: 16
+          isTrue:
+            fields:
+            - name: effectDelay
+              type: f32
+      - branch:
+          field: flags
+          test_flag: 32
+          isTrue:
+            fields:
+            - name: effectDurationFromServer
+              type: f32
+      - branch:
+          field: flags
+          test_flag: 64
+          isTrue:
+            fields:
+            - name: deltaHpId
+              type: i32

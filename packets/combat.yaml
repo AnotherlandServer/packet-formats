@@ -27,7 +27,11 @@ packets:
         type: avatar_id
       - name: hp
         type: i32
-      - type: u32
+      - name: id
+        type: i32
+        description: >
+          An hp update might get an id, so it can be traced back 
+          to an ability use by the client.
   oaPktPvp:
     id: 0x45
     subId: 0x00
