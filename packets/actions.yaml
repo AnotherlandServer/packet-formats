@@ -120,9 +120,9 @@ packets:
     subId: 0x9a
     inherit: CPkt
     fields:
-      - name: caster
+      - name: source
         type: avatar_id
-      - name: itemId
+      - name: abilityId
         type: uuid
       - type: i32
         name: predictionId
@@ -133,7 +133,7 @@ packets:
           test_flag: 1
           isTrue:
             fields:
-              - name: skillId
+              - name: itemId
                 type: uuid
       - branch:
           field: flag
@@ -154,7 +154,7 @@ packets:
           test_flag: 8
           isTrue:
             fields:
-              - type: u32
+              - type: i32
                 name: comboStageId
       - branch:
           field: flag
@@ -179,11 +179,11 @@ packets:
       - type: avatar_id
         name: player
       - type: avatar_id
-        name: caster
+        name: sourceAvatar
       - type: uuid
-        name: buffId
+        name: sourceId
       - type: uuid
-        name: abilityId
+        name: skillId
       - type:
           name: u8
           enum:

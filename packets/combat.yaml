@@ -60,3 +60,18 @@ structures:
       - type: u8
       - type: u32
       - type: u32
+  CooldownUpdate:
+    fields:
+      - name: entryCount
+        type: u32
+      - name: entries
+        type: { name: array, len: entryCount, type: :CooldownEntry }
+  CooldownEntry:
+    fields:
+      - type: i32
+        name: key
+      - type: bool
+      - type: f32
+        name: totalDuration
+      - type: f32
+        name: remainingDuration
