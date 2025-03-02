@@ -9,7 +9,7 @@ packets:
       - name: pos
         type: :NetworkVec3
       - name: rot
-        type: :NetworkVec4
+        type: :NetworkQuat
       - name: vel
         type: :NetworkVec3
       - name: physics
@@ -65,7 +65,7 @@ structures:
       - name: pos
         type: :NetworkVec3
       - name: rot
-        type: :NetworkVec4
+        type: :NetworkQuat
       - name: vel
         type: :NetworkVec3
       - name: seconds

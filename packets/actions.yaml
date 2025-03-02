@@ -30,7 +30,7 @@ packets:
         type: bool
       - type: :NetworkVec3
         name: pos
-      - type: :NetworkVec4
+      - type: :NetworkQuat
         name: rot
   CPktTargetRequest:
     id: 0x66
@@ -162,7 +162,7 @@ packets:
           isTrue:
             fields:
               - name: targetRotation
-                type: :NetworkVec4
+                type: :NetworkQuat
       - branch:
           field: flag
           test_flag: 32
@@ -203,7 +203,7 @@ packets:
           test_flag: 2
           isTrue:
             fields:
-              - type: :NetworkVec4
+              - type: :NetworkQuat
                 name: rotation
       - branch:
           field: flag
