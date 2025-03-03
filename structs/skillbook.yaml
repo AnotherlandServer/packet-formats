@@ -15,7 +15,8 @@ structures:
       - name: version
         type: u32
         description: Always must be set to 0
-      - type: uuid
+      - name: id
+        type: uuid
       - name: contentId
         type: uuid
       - name: group
