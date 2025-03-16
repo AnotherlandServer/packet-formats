@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=../otherland.packet.schema.yaml
 
 structures:
-  ClassSkills:
+  oaAbilityDataPlayerArray:
     fields:
       - name: classHash
         type: u32
@@ -9,8 +9,8 @@ structures:
       - name: count
         type: u32
       - name: skills
-        type: { name: array, len: count, type: :ClassSkill }
-  ClassSkill:
+        type: { name: array, len: count, type: :oaAbilityDataPlayer }
+  oaAbilityDataPlayer:
     fields:
       - name: version
         type: u32
@@ -21,7 +21,7 @@ structures:
         type: uuid
       - name: group
         type: cstring
-      - type: u32
+      - type: i32
   oaAbilityBarReferences:
     fields:
       - name: classHash
@@ -42,6 +42,6 @@ structures:
   AbilityBarReference:
     fields:
       - name: id
-        type: u32
+        type: i32
       - name: skill
         type: cstring
