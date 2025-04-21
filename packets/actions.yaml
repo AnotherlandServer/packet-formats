@@ -47,15 +47,17 @@ packets:
     subId: 0x37
     inherit: CPkt
     fields:
-      - type: u64
-      - type: u64
+      - type: avatar_id
+        name: avatarId
+      - type: avatar_id
+        name: portalId
       - type: u16
       - type: u32
         name: arrayLenA
-      - type: { name: array, len: arrayLenA, type: :PortalAckPartA}
+      - type: { name: array, len: arrayLenA, type: :PortalAckPartB}
       - type: u32
         name: arrayLenB
-      - type: { name: array, len: arrayLenB, type: :PortalAckPartB}
+      - type: { name: array, len: arrayLenB, type: :PortalAckPartA}
       - type: u32
         name: arrayLenC
       - type: { name: array, len: arrayLenC, type: :PortalAckPartB}
@@ -252,17 +254,17 @@ structures:
         type: cstring
       - name: displayName
         type: cstring
-      - name: worldTexture
+      - name: worldIcon
         type: cstring
-      - name: portalTexture
+      - name: portalIcon
         type: cstring
       - name: description
         type: cstring
-      - type: u32
-      - type: u32
-      - type: u32
-      - name: level
+      - name: portalType
         type: u32
+      - name: worldType
+        type: u32
+      - type: u32
   PortalAckPartB:
     fields:
       - name: mapName
@@ -271,14 +273,20 @@ structures:
         type: cstring
       - name: displayName
         type: cstring
-      - name: worldTexture
+      - name: worldIcon
         type: cstring
-      - name: portalTexture
+      - name: portalIcon
         type: cstring
       - name: description
         type: cstring
-      - type: u32
-      - type: u32
+      - name: portalType
+        type: u32
+      - name: worldType
+        type: u32
+      - name: playerLevel
+        type: u32
+      - name: level
+        type: u32
   AbilityEffect:
     fields:
       - name: targetActor
