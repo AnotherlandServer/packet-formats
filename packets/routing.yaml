@@ -6,7 +6,7 @@ packets:
     subId: 0x47
     inherit: CPkt
     fields:
-      - type: u64
+      - type: avatar_id
       - type: u8
       - type: nativeparam
   oaCommunityPktBase:
