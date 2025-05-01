@@ -14,15 +14,18 @@ packets:
     subId: 0x44
     inherit: CPkt
     fields:
-      - type: u64
+      - type: avatar_id
       - type: u8
       - type: nativeparam
 structures:
   FactionRelation:
     fields:
       - type: uuid
+        name: id
       - type: cstring
+        name: name
       - type: f32
+        name: standing
   FactionRelationList:
     fields:
       - type: u32
