@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  CPktBuffUpdate:
+    id: 0x67
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: uuid
+        name: instanceId
+      - type: i32
+        name: classId
+      - type: avatar_id
+        name: avatarId
+      - name: hasTemplate
+        type: bool
+      - branch:
+          field: hasTemplate
+          isTrue:
+            fields:
+            - type: uuid
+              name: contentId
+          false:
+      - type: i32
+      - type: rawbuffer
+        name: params
+  CPktBuffRequest:
+    id: 0x68
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: u16
+        name: request_type
+      - type: uuid
+        name: instanceId
+      - type: avatar_id
+        name: avatarId

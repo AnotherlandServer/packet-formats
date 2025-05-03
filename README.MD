@@ -18,6 +18,8 @@ The packet definitions make use of same basic data types not directly defined by
 - **f32, f64**: Single and double precision little endian IEEE 754 floating point numbers.
 - **cstring**: ANSI string of single byte characters, prefixed by its length in bytes encoded as a two byte little endian integer, has no terminating null character.
 - **wstring**: Wide string of two byte, little endian UTF-16 characters, prefixed by its length in characters encoded as a two byte little endian integer, has no terminating null character.
+- **buffer**: A generic buffer prefixed with a length.
+- **rawbuffer**: A generic buffer without prefix. Must always be the last field in a packet, because it consumes all remaining bytes.
 - **nativeparam**: An Otherland specific structured data type. (See: [Nativeparam format](doc/nativeparam.md))
 - **uuid**: A standard 128 bit, COM/OLE style, little endian Universally Unique Identifier.
 - **packet**: Another embedded packet, starting with its two byte identifier.
