@@ -245,6 +245,16 @@ packets:
       - type: avatar_id
       - type: bool
       - type: avatar_id
+  CPktAvatarBehaviors:
+    id: 0x34
+    subId: 0x0
+    inherit: CPkt
+    fields:
+      - type: avatar_id
+      - type: buffer
+      - type: bool
+      - type: bool
+      - type: bool
 structures:
   PortalAckPartA:
     fields:
