@@ -46,15 +46,15 @@ packets:
     subId: 0x2
     inherit: CPkt
     fields:
-      - type: :dialogStructure
+      - type: :DialogStructure
   CPktStream_166_3:
     id: 0xa6
     subId: 0x3
     inherit: CPkt
     fields:
-      - type: :dialogStructure2
+      - type: :DialogStructure2
 structures:
-  dialogStructure:
+  DialogStructure:
     fields:
       - type: avatar_id
         name: npcId
@@ -103,7 +103,7 @@ structures:
       - type: cstring
         name: dialogueSerialNumber
       - type: cstring
-  dialogStructure2:
+  DialogStructure2:
     fields:
       - type: avatar_id
         name: npcId
