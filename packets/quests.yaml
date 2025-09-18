@@ -139,6 +139,19 @@ packets:
         type: cstring
       - type: u32
 structures:
+  AvatarFilter:
+    fields:
+      - name: kind
+        type:
+          name: u32
+          enum: 
+            1: ContentId
+            2: InstanceId
+            3: QuestTags
+            4: LootItem
+            5: Dialog
+      - type: cstring
+        name: filter
   oaQuestTemplate:
     fields:
       - type: i32
@@ -150,36 +163,45 @@ structures:
         name: level
       - type: uuid
         name: worldGuid
-      - type: i32
-      - type: cstring
+      - name: filter1
+        type: :AvatarFilter
       - type: i32
       - type: i32
         name: timeLimitOption
       - type: i32
         name: timeLimitSec
       - type: i32
+        name: chainId
       - type: i32
       - type: u32
       - type: i32
       - type: cstring
 
       - type: uuid
+        name: avatarFilterId
       - type: i32
       - type: i32
         name: expReward
       - type: i32
         name: bitReward
       - type: :oaQuestBeacon
+        name: areaBeacon
       - type: :oaQuestBeacon
+        name: completedBeacon
       - type: i32
       - type: i32
   oaQuestBeacon:
     fields:
       - type: uuid
+        name: worldGuid
       - type: uuid
+        name: zoneGuid
       - type: :NetworkVec3
+        name: position
       - type: u32
+        name: radius
       - type: u32
+        name: height
   oaQuestCondition:
     fields:
       - type: i32
@@ -187,13 +209,14 @@ structures:
       - type: i32
         name: conditionId
       - type: i32
-      - type: i32
-      - type: cstring
+        name: kind
+      - name: filter1
+        type: :AvatarFilter
       - type: i32
         name: requiredCount
       - type: i32
-      - type: i32
-      - type: cstring
+      - name: filter2
+        type: :AvatarFilter
       - type: i32
       - type: cstring
       - type: i32
@@ -203,6 +226,7 @@ structures:
       - type: i32
       - type: cstring
       - type: :oaQuestBeacon
+        name: waypoint
   oaQuestReward:
     fields:
       - type: i32

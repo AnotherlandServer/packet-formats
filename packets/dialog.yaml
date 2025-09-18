@@ -6,12 +6,18 @@ packets:
     subId: 0x0
     inherit: CPkt
     fields:
-      - type: u32
+      - type: 
+          name: u32
+          enum:
+            0: target
+            1: guid
+        name: kind
       - name: instigator
         type: avatar_id
       - name: target
         type: avatar_id
       - type: uuid
+        name: id
   oaPktDialogChoice:
     id: 0xa6
     subId: 0x1
