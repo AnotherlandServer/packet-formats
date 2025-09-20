@@ -57,14 +57,14 @@ packets:
                   isTrue:
                     fields:
                     - type: uuid 
-                      name: flag_4_uuid
+                      name: contentId
               - branch:
                   field: flags
                   test_flag: 2
                   isTrue:
                     fields:
                     - type: uuid 
-                      name: flag_2_uuid
+                      name: instanceId
               - type: buffer
                 name: movement
       - type: u16
