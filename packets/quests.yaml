@@ -197,9 +197,9 @@ structures:
   oaQuestBeacon:
     fields:
       - type: uuid
-        name: worldGuid
-      - type: uuid
         name: zoneGuid
+      - type: uuid
+        name: worldGuid
       - type: :NetworkVec3
         name: position
       - type: u32
@@ -236,8 +236,9 @@ structures:
       - type: i32
       - type: cstring
       - type: i32
-        name: greaterThanOne
-        description: Has to be > 1
+        name: flags
+        description: |
+          2: unknown
       - type: cstring
       - type: i32
       - type: cstring
