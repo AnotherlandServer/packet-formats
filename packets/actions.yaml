@@ -255,6 +255,20 @@ packets:
       - type: bool
       - type: bool
       - type: bool
+  oaPktRequestQuestAction:
+    id: 0xa5
+    subId: 0x5
+    inherit: CPkt
+    fields:
+      - type: avatar_id
+        name: instigator
+      - type: 
+          name: u32
+          enum:
+            18: interact
+        name: kind
+      - type: avatar_id
+        name: target
 structures:
   PortalAckPartA:
     fields:
