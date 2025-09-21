@@ -23,7 +23,8 @@ packets:
         name: player
       - type: u32
         name: questId
-      - type: avatar_id
+      - type: i64
+        name: acceptedTime
       - type: bool
         name: questFailed
       - type: u32
@@ -142,14 +143,15 @@ structures:
   AvatarFilter:
     fields:
       - name: kind
-        type:
-          name: u32
-          enum: 
-            1: ContentId
-            2: InstanceId
-            3: QuestTags
-            4: LootItem
-            5: Dialog
+        type: i32 
+        description: >
+          1 = ContentId
+          2 = InstanceId (interpreted as ContentId too, if quest condition type is 4)
+          3 = QuestTags
+          4 = LootItem
+          5 = DialogId
+
+          Set to a dialog id you want to filter for, if condition type is 4.
       - type: cstring
         name: filter
   oaQuestTemplate:
@@ -189,7 +191,9 @@ structures:
       - type: :oaQuestBeacon
         name: completedBeacon
       - type: i32
+        name: progressDialogue
       - type: i32
+        name: completionDialogue
   oaQuestBeacon:
     fields:
       - type: uuid
@@ -208,8 +212,20 @@ structures:
         name: questId
       - type: i32
         name: conditionId
-      - type: i32
-        name: kind
+      - name: kind
+        type: 
+          name: u32
+          enum:
+            0: unk0
+            1: dialog
+            2: unk2
+            4: loot
+            5: unk5
+            6: unk6
+            7: unk7
+            8: unk8
+            17: unk17
+            18: interact
       - name: filter1
         type: :AvatarFilter
       - type: i32
