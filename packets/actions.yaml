@@ -269,6 +269,33 @@ packets:
         name: kind
       - type: avatar_id
         name: target
+  oaPktInteractionUpdate:
+    id: 0xa8
+    subId: 0x6
+    inherit: CPkt
+    fields:
+      - type:
+          name: u16
+          enum:
+            0: QuestInteract
+            1: QuestInteract2
+            2: EDNA_Extract
+            4: CapturingFlag
+        name: interactionType
+      - type: 
+          name: u16
+          enum:
+            0: Interaction
+            1: CastCompleted
+            2: CastInterrupted
+        name: eventType
+      - type: avatar_id
+        name: instigator
+      - type: avatar_id
+        name: target
+      - type: f32
+        name: duration
+      - type: u64
 structures:
   PortalAckPartA:
     fields:

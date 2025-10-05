@@ -30,6 +30,7 @@ packets:
       - type: u32
         name: entryCount
       - type: { name: array, len: entryCount, type: :QuestUpdateData }
+        name: conditions
       - type: cstring
   CPktStream_165_2:
     id: 0xa5
@@ -268,6 +269,8 @@ structures:
       - type: cstring
   QuestUpdateData:
     fields:
-      - type: u32
-      - type: u32
+      - type: i32
+        name: conditionId
+      - type: i32
+        name: count
       - type: u64
