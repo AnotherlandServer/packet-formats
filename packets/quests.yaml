@@ -57,6 +57,7 @@ packets:
             0: accept
             1: return
             2: abandon
+            3: request_next
             4: request
             5: query_active
           name: u32
