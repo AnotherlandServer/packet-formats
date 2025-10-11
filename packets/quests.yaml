@@ -178,6 +178,7 @@ structures:
         name: chainId
       - type: i32
       - type: u32
+        name: systemFlags
       - type: i32
       - type: cstring
 
@@ -226,6 +227,7 @@ structures:
             6: unk6
             7: unk7
             8: unk8
+            16: wait # Not confident about this one
             17: unk17
             18: interact
       - name: filter1
