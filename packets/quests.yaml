@@ -235,6 +235,7 @@ structures:
       - type: i32
         name: requiredCount
       - type: i32
+        name: stage
       - name: filter2
         type: :AvatarFilter
       - type: i32

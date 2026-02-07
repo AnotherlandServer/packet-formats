@@ -130,5 +130,9 @@ structures:
         description: Always has to be set to zero.
       - type: u32
         name: quest_id
-      - type: u32
-        description: Unused
+      - type: 
+          name: u32
+          enum:
+            0: offer
+            1: return
+        name: mode
