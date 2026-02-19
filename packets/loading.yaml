@@ -20,8 +20,10 @@ packets:
           name: u16
           enum:
             0: WorldDef
-      - type: uuid
-      - type: cstring
+      - name: resourceId
+        type: uuid
+      - name: movie
+        type: cstring
   CPktBlob:
     id: 0x23
     subId: 0x0
