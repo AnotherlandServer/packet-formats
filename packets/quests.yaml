@@ -42,11 +42,13 @@ packets:
         name: conditions
       - type: { name: array, len: conditions, type: :oaQuestCondition }
       - type: u32
-        name: rewardsCount1
-      - type: { name: array, len: rewardsCount1, type: :oaQuestReward }
+        name: compulsoryRewardCount
+      - type: { name: array, len: compulsoryRewardCount, type: :oaQuestReward }
+        name: compulsoryRewards
       - type: u32
-        name: rewardsCount2
-      - type: { name: array, len: rewardsCount2, type: :oaQuestReward }
+        name: alternativeRewardCount
+      - type: { name: array, len: alternativeRewardCount, type: :oaQuestReward }
+        name: alternativeRewards
   oaPktQuestRequest:
     id: 0xa5
     subId: 0x4
@@ -253,15 +255,29 @@ structures:
     fields:
       - type: i32
       - type: i32
+        name: reward_id
       - type: cstring
-      - type: i32
+      - name: kind
+        type: 
+          name: u32
+          enum:
+            1: bits
+            2: cash
+            3: soma
+            4: item
+            5: faction
+            6: portal
       - type: cstring
+        name: id
       - type: i32
+        name: value
       - type: i32
       - type: i32
       - type: :QuestData
       - type: i32
-      - type: i32
+        name: combatStyle
+      - name: gender
+        type: i32
   QuestData:
     fields:
       - type: u32
