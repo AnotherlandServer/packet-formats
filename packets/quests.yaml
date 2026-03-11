@@ -143,6 +143,20 @@ packets:
       - name: arg
         type: cstring
       - type: u32
+  oaPktQuestTrackerUpdate:
+    id: 0xa5
+    subId: 0x1
+    inherit: CPkt
+    fields:
+      - name: player
+        type: avatar_id
+      - name: quest_id
+        type: i32
+      - name: condition_id
+        type: i32
+      - name: condition_count
+        type: i32
+      - type: u64
 structures:
   AvatarFilter:
     fields:
