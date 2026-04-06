@@ -31,6 +31,7 @@ structures:
       - name: classHash
         type: u32
         description: Always must be set to 0x9D35021A
-      - name: playerStance
+      - name: stanceId
         type: u8
-      - type: u8
+      - name: stanceRank
+        type: u8

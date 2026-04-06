@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=../otherland.packet.schema.yaml
+
+packets:
+  CPktSkillUpdate:
+    id: 0x64
+    subId: 0x00
+    inherit: CPktStreamedBase
+    fields:
+      - type: bool
+      - type: rawbuffer
+        name: params

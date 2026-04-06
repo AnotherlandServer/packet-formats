@@ -21,7 +21,8 @@ structures:
         type: uuid
       - name: group
         type: cstring
-      - type: i32
+      - name: stance
+        type: i32
   oaAbilityBarReferences:
     fields:
       - name: classHash

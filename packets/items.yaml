@@ -22,7 +22,7 @@ packets:
   CPktItemUpdate:
     id: 0x36
     subId: 0x00
-    inherit: CPkt
+    inherit: CPktStreamedBase
     description: >
       Tells the client to add one item to the item list of 
       the Avatar with Id `avatarId`. 
@@ -38,37 +38,10 @@ packets:
     relatesTo:
       - CPktItemUpdate_37
     fields:
-      - name: id
-        type: uuid
-        description: >
-          Unique ID for this specific instance of the item.
-          This is used to reference this entry in future requests.
-      - name: classId
-        type: u32
-        description: >
-          Param class ID for the item data in `params`
-      - name: avatarId
-        type: avatar_id
-        description: >
-          Avatar ID of the item owner.
-      - type: u8
-        name: useTemplate
-        description: >
-          Has to be 1 and `templateId` needs to be set in
-          order for the client to correctly display the item.
-      - branch:
-          field: useTemplate
-          test_equal: 1
-          isTrue:
-            fields:
-            - name: templateId
-              type: uuid
-              description: >
-                Guid of the items template, references content.db:items.
       - type: u32
       - type: bool
       - name: params
-        type: { name: array, len: _eof, type: u8 }
+        type: rawbuffer
         description: >
           Item parameters of class `classId`. All necessary item 
           attributes need to be sent here, even though the client

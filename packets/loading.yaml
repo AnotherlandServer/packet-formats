@@ -88,3 +88,34 @@ packets:
             7: InitialInterestsLoaded
             8: InGame
       - type: avatar_id
+  CPktStreamedBase:
+    id: 0 # Placeholder
+    subId: 0
+    inherit: CPkt
+    fields:
+      - type: uuid
+        name: instanceId
+        description: >
+          Unique ID for this specific object instance.
+      - type: i32
+        name: classId
+        description: >
+          Param class ID for the object data in `params`.
+      - type: avatar_id
+        name: avatarId
+        description: >
+          Avatar ID of the object owner.
+      - name: hasTemplate
+        type: bool
+        description: >
+          Set to true if the object is based on a template. 
+          If true, the client will expect a `contentId` field with the template ID.
+      - branch:
+          field: hasTemplate
+          isTrue:
+            fields:
+            - type: uuid
+              name: contentId
+              description: >
+                Template ID for the object, references content.db.
+          false:

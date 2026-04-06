@@ -4,23 +4,8 @@ packets:
   CPktBuffUpdate:
     id: 0x67
     subId: 0x0
-    inherit: CPkt
+    inherit: CPktStreamedBase
     fields:
-      - type: uuid
-        name: instanceId
-      - type: i32
-        name: classId
-      - type: avatar_id
-        name: avatarId
-      - name: hasTemplate
-        type: bool
-      - branch:
-          field: hasTemplate
-          isTrue:
-            fields:
-            - type: uuid
-              name: contentId
-          false:
       - type: i32
       - type: rawbuffer
         name: params
